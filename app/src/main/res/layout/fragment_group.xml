@@ -6,7 +6,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".GroupFragment">
+        tools:context=".fragments.GroupFragment">
 
         <TextView
             android:id="@+id/textName"
@@ -49,7 +49,7 @@
             tools:text="123132 $" />
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/challenges_list"
+            android:id="@+id/goods_list"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/margin_medium"

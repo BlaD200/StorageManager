@@ -31,7 +31,7 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         //noinspection SwitchStatementWithTooFewBranches
         switch (item.getItemId()) {
-            case R.id.action_settings:
+            case R.id.action_logout:
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
