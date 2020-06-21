@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".GoodFragment">
+
+        <TextView
+            android:id="@+id/textName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.25"
+            tools:text="Good's Name" />
+
+        <TextView
+            android:id="@+id/textDescription"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_large"
+            android:gravity="center"
+            app:layout_constraintTop_toBottomOf="@+id/textName"
+            tools:layout_editor_absoluteX="0dp"
+            tools:text="Description Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis suscipit lectus non est elementum congue. Sed at imperdiet quam. Pellentesque ullamcorper dolor nec sem euismod, nec feugiat ex ultricies. Proin ut efficitur ligula. Sed feugiat, metus a sagittis porttitor, ante metus vestibulum mi, sit amet faucibus nibh sapien eget" />
+
+        <TextView
+            android:id="@+id/textProducer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_large"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textDescription"
+            tools:text="Producer" />
+
+        <TextView
+            android:id="@+id/textAmount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_large"
+            app:layout_constraintEnd_toEndOf="@+id/textProducer"
+            app:layout_constraintStart_toStartOf="@+id/textProducer"
+            app:layout_constraintTop_toBottomOf="@+id/textProducer"
+            tools:text="Amount" />
+
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_medium"
+            android:contentDescription="@string/multiply_icon"
+            android:src="@drawable/ic_multiply"
+            app:layout_constraintEnd_toEndOf="@+id/textAmount"
+            app:layout_constraintStart_toStartOf="@+id/textAmount"
+            app:layout_constraintTop_toBottomOf="@+id/textAmount" />
+
+        <TextView
+            android:id="@+id/textPrice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_medium"
+            app:layout_constraintEnd_toEndOf="@+id/imageView"
+            app:layout_constraintStart_toStartOf="@+id/imageView"
+            app:layout_constraintTop_toBottomOf="@+id/imageView"
+            tools:text="Price" />
+
+        <ImageView
+            android:id="@+id/imageView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_medium"
+            android:contentDescription="@string/equals_icon"
+            android:src="@drawable/ic_equal"
+            app:layout_constraintEnd_toEndOf="@+id/textPrice"
+            app:layout_constraintStart_toStartOf="@+id/textPrice"
+            app:layout_constraintTop_toBottomOf="@+id/textPrice" />
+
+        <TextView
+            android:id="@+id/textStats"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_medium"
+            app:layout_constraintEnd_toEndOf="@+id/imageView2"
+            app:layout_constraintStart_toStartOf="@+id/imageView2"
+            app:layout_constraintTop_toBottomOf="@+id/imageView2"
+            tools:text="Stats" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

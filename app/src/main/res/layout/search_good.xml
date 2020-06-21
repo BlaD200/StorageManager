@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <EditText
+            android:id="@+id/edit_query"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/margin_small"
+            android:layout_marginTop="@dimen/margin_small"
+            android:layout_marginRight="@dimen/margin_small"
+            android:autofillHints="@string/edit_query_hint"
+            android:hint="@string/edit_query_hint"
+            android:inputType="text"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/textProducer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_small"
+            android:text="@string/producer"
+            app:layout_constraintEnd_toStartOf="@+id/spinnerProducer"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/edit_query" />
+
+        <Spinner
+            android:id="@+id/spinnerProducer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="@+id/textProducer"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/textProducer"
+            app:layout_constraintTop_toTopOf="@+id/textProducer" />
+
+        <TextView
+            android:id="@+id/textAmount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_medium_plus"
+            android:text="@string/amount"
+            app:layout_constraintEnd_toStartOf="@+id/editAmountMin"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textProducer" />
+
+        <EditText
+            android:id="@+id/editAmountMin"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:autofillHints="@string/min"
+            android:hint="@string/min"
+            android:inputType="number"
+            app:layout_constraintBottom_toBottomOf="@+id/textAmount"
+            app:layout_constraintEnd_toStartOf="@+id/dash1"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/textAmount"
+            app:layout_constraintTop_toTopOf="@+id/textAmount" />
+
+        <ImageView
+            android:id="@+id/dash1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/dash_icon"
+            app:layout_constraintBottom_toBottomOf="@+id/textAmount"
+            app:layout_constraintEnd_toStartOf="@+id/editAmountMax"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/editAmountMin"
+            app:layout_constraintTop_toTopOf="@+id/textAmount"
+            app:srcCompat="@drawable/ic_line" />
+
+        <EditText
+            android:id="@+id/editAmountMax"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:autofillHints="@string/max"
+            android:hint="@string/max"
+            android:inputType="number"
+            app:layout_constraintBottom_toBottomOf="@+id/textAmount"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/dash1"
+            app:layout_constraintTop_toTopOf="@+id/textAmount" />
+
+        <TextView
+            android:id="@+id/textPrice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_medium_plus"
+            android:text="@string/price"
+            app:layout_constraintEnd_toEndOf="@+id/textAmount"
+            app:layout_constraintStart_toStartOf="@+id/textAmount"
+            app:layout_constraintTop_toBottomOf="@+id/textAmount" />
+
+        <EditText
+            android:id="@+id/editPriceMin"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:autofillHints="@string/min"
+            android:hint="@string/min"
+            android:inputType="number"
+            android:textSize="@dimen/size_small"
+            app:layout_constraintBottom_toBottomOf="@+id/textPrice"
+            app:layout_constraintEnd_toEndOf="@+id/editAmountMin"
+            app:layout_constraintStart_toStartOf="@+id/editAmountMin"
+            app:layout_constraintTop_toTopOf="@+id/textPrice" />
+
+        <ImageView
+            android:id="@+id/dash2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/dash_icon"
+            app:layout_constraintBottom_toBottomOf="@+id/textPrice"
+            app:layout_constraintEnd_toEndOf="@+id/dash1"
+            app:layout_constraintStart_toStartOf="@+id/dash1"
+            app:layout_constraintTop_toTopOf="@+id/textPrice"
+            app:srcCompat="@drawable/ic_line" />
+
+        <EditText
+            android:id="@+id/editPriceMax"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:autofillHints="@string/max"
+            android:hint="@string/max"
+            android:inputType="number"
+            android:textSize="@dimen/size_small"
+            app:layout_constraintBottom_toBottomOf="@+id/textPrice"
+            app:layout_constraintEnd_toEndOf="@+id/editAmountMax"
+            app:layout_constraintStart_toStartOf="@+id/editAmountMax"
+            app:layout_constraintTop_toTopOf="@+id/textPrice" />
+
+        <Button
+            android:id="@+id/btnSearch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_medium"
+            android:layout_marginEnd="@dimen/margin_medium"
+            android:text="@string/search"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/editPriceMax" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>
