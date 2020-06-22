@@ -52,15 +52,15 @@ public class GroupsFragment extends Fragment
     }
 
     @Override
-    public void groupData(String name, String description) {
+    public void getGroupData(String name, String description) {
+        String message;
+
         if (name.isEmpty() || description.isEmpty())
-            Toast.makeText(requireContext(),
-                    "Name or description cannot be empty",
-                    Toast.LENGTH_SHORT).show();
+            message = "Name or description cannot be empty";
         else
-            Toast.makeText(requireContext(),
-                    new GroupEntity(name, description).toString(),
-                    Toast.LENGTH_SHORT).show();
+            message = new GroupEntity(name, description).toString();
+
+        Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show();
     }
 
 

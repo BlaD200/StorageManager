@@ -31,4 +31,5 @@
     <string name="cancel">Cancel</string>
     <string name="goods_icon">Goods Icon</string>
     <string name="group">Group</string>
+    <string name="good_creation">Good Creation</string>
 </resources>

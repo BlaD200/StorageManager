@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -16,11 +17,12 @@ import com.example.storagemanager.R;
 import com.example.storagemanager.databinding.FragmentGoodsBinding;
 import com.example.storagemanager.databinding.ItemGoodBinding;
 import com.example.storagemanager.entities.GoodEntity;
+import com.example.storagemanager.fragments.dialogs.CreateGoodDialog;
 
 import java.util.LinkedList;
 import java.util.List;
 
-public class GoodsFragment extends Fragment {
+public class GoodsFragment extends Fragment implements CreateGoodDialog.CreateGoodDialogListener {
 
     private FragmentGoodsBinding mBinding;
 
@@ -43,8 +45,23 @@ public class GoodsFragment extends Fragment {
         recyclerView.setAdapter(new GoodsFragment.Adapter(testData()));
 
         mBinding.fab.setOnClickListener(v -> {
-
+            CreateGoodDialog dialog = new CreateGoodDialog();
+            dialog.show(GoodsFragment.this.getChildFragmentManager(), CREATE_GOOD_DIALOG_TAG);
         });
+    }
+
+    @Override
+    public void getGoodData(String name, String group, String description, String producer, int amount, int price) {
+        String message;
+
+        if (name.isEmpty() || group.isEmpty() || description.isEmpty())
+            message = "Name, group, description or producer cannot be empty";
+        else if (amount == -1 || price == -1)
+            message = "Amount or price cannot be empty";
+        else
+            message = new GoodEntity(name, group, description, producer, amount, price).toString();
+
+        Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show();
     }
 
     static class Adapter extends RecyclerView.Adapter<Adapter.GoodViewHolder> {
@@ -123,4 +140,6 @@ public class GoodsFragment extends Fragment {
 
         return goodEntities;
     }
+
+    private static final String CREATE_GOOD_DIALOG_TAG = "CREATE_GOOD_DIALOG";
 }
