@@ -52,7 +52,7 @@ public class GroupsFragment extends Fragment
     }
 
     @Override
-    public void onCreate(String name, String description) {
+    public void groupData(String name, String description) {
         if (name.isEmpty() || description.isEmpty())
             Toast.makeText(requireContext(),
                     "Name or description cannot be empty",
@@ -85,8 +85,8 @@ public class GroupsFragment extends Fragment
 
         @Override
         public void onBindViewHolder(GroupViewHolder holder, int position) {
-            GroupEntity challenge = mData.get(position);
-            holder.bind(challenge);
+            GroupEntity groupEntity = mData.get(position);
+            holder.bind(groupEntity);
         }
 
         @Override

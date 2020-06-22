@@ -7,9 +7,9 @@
 
     <fragment
         android:id="@+id/allGoodsFragment"
-        android:name="com.example.storagemanager.fragments.AllGoodsFragment"
+        android:name="com.example.storagemanager.fragments.GoodsFragment"
         android:label="AllGoodsFragment"
-        tools:layout="@layout/fragment_all_goods" />
+        tools:layout="@layout/fragment_goods" />
 
     <fragment
         android:id="@+id/groupsFragment"

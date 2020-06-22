@@ -30,11 +30,21 @@
         </com.google.android.material.appbar.AppBarLayout>
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/goods_list"
+            android:id="@+id/goodsList"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             app:layout_behavior="@string/appbar_scrolling_view_behavior"
             tools:listitem="@layout/item_good" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fab"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="end|bottom"
+            android:layout_margin="@dimen/margin_medium"
+            android:src="@drawable/ic_plus"
+            app:fabSize="normal"
+            app:layout_behavior="@string/hide_bottom_view_on_scroll_behavior" />
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 

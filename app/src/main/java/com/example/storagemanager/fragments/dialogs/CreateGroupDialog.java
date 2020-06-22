@@ -19,7 +19,7 @@ import java.util.Objects;
 public class CreateGroupDialog extends DialogFragment {
 
     public interface CreateGroupDialogListener {
-        void onCreate(String name, String description);
+        void groupData(String name, String description);
     }
 
     private CreateGroupDialogListener listener;
@@ -38,7 +38,7 @@ public class CreateGroupDialog extends DialogFragment {
                     String name = binding.editName.getText().toString();
                     String description = binding.editDescription.getText().toString();
 
-                    listener.onCreate(name, description);
+                    listener.groupData(name, description);
                 })
                 .setNegativeButton(R.string.cancel, (dialog, id) ->
                         Objects.requireNonNull(CreateGroupDialog.this.getDialog()).cancel())

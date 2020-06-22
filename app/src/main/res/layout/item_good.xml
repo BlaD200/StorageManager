@@ -3,6 +3,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <data>
+
+        <variable
+            name="good"
+            type="com.example.storagemanager.entities.GoodEntity" />
+    </data>
+
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -19,6 +26,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/margin_medium"
+                android:text="@{good.name}"
                 android:textSize="@dimen/size_small"
                 app:layout_constraintBottom_toTopOf="@+id/textView"
                 app:layout_constraintStart_toStartOf="parent"
@@ -29,6 +37,7 @@
                 android:id="@+id/textView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:text="@{good.group}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="@+id/textGoodName"
                 app:layout_constraintTop_toBottomOf="@+id/textGoodName"
@@ -39,6 +48,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="@dimen/margin_medium_plus"
+                android:text="@{String.valueOf(good.amount)}"
                 app:layout_constraintBottom_toBottomOf="@+id/textGoodName"
                 app:layout_constraintEnd_toStartOf="@+id/btnPlus"
                 app:layout_constraintTop_toTopOf="@+id/textGoodName"
@@ -48,6 +58,7 @@
                 android:id="@+id/textPrice"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:text="@{String.valueOf(good.price)}"
                 app:layout_constraintBottom_toBottomOf="@+id/textView"
                 app:layout_constraintEnd_toEndOf="@+id/textAmount"
                 app:layout_constraintStart_toStartOf="@+id/textAmount"
