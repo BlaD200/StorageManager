@@ -12,20 +12,32 @@
             android:id="@+id/textName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginTop="@dimen/margin_large"
+            android:textSize="@dimen/size_large"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.25"
             tools:text="Good's Name" />
+
+        <TextView
+            android:id="@+id/textGroup"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_large"
+            android:textSize="@dimen/size_medium"
+            app:layout_constraintEnd_toEndOf="@+id/textName"
+            app:layout_constraintStart_toStartOf="@+id/textName"
+            app:layout_constraintTop_toBottomOf="@+id/textName"
+            tools:text="Group" />
 
         <TextView
             android:id="@+id/textDescription"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/margin_large"
-            android:gravity="center"
-            app:layout_constraintTop_toBottomOf="@+id/textName"
+            android:textAlignment="center"
+            android:textSize="@dimen/size_small"
+            app:layout_constraintTop_toBottomOf="@+id/textGroup"
             tools:layout_editor_absoluteX="0dp"
             tools:text="Description Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis suscipit lectus non est elementum congue. Sed at imperdiet quam. Pellentesque ullamcorper dolor nec sem euismod, nec feugiat ex ultricies. Proin ut efficitur ligula. Sed feugiat, metus a sagittis porttitor, ante metus vestibulum mi, sit amet faucibus nibh sapien eget" />
 
@@ -34,6 +46,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/margin_large"
+            android:textSize="@dimen/size_medium"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textDescription"
@@ -44,13 +57,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/margin_large"
+            android:textSize="@dimen/size_medium"
             app:layout_constraintEnd_toEndOf="@+id/textProducer"
             app:layout_constraintStart_toStartOf="@+id/textProducer"
             app:layout_constraintTop_toBottomOf="@+id/textProducer"
             tools:text="Amount" />
 
         <ImageView
-            android:id="@+id/imageView"
+            android:id="@+id/multiplyIcon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/margin_medium"
@@ -65,13 +79,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/margin_medium"
-            app:layout_constraintEnd_toEndOf="@+id/imageView"
-            app:layout_constraintStart_toStartOf="@+id/imageView"
-            app:layout_constraintTop_toBottomOf="@+id/imageView"
+            android:textSize="@dimen/size_medium"
+            app:layout_constraintEnd_toEndOf="@+id/multiplyIcon"
+            app:layout_constraintStart_toStartOf="@+id/multiplyIcon"
+            app:layout_constraintTop_toBottomOf="@+id/multiplyIcon"
             tools:text="Price" />
 
         <ImageView
-            android:id="@+id/imageView2"
+            android:id="@+id/equalsIcon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/margin_medium"
@@ -86,9 +101,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/margin_medium"
-            app:layout_constraintEnd_toEndOf="@+id/imageView2"
-            app:layout_constraintStart_toStartOf="@+id/imageView2"
-            app:layout_constraintTop_toBottomOf="@+id/imageView2"
+            android:textSize="@dimen/size_medium"
+            app:layout_constraintEnd_toEndOf="@+id/equalsIcon"
+            app:layout_constraintStart_toStartOf="@+id/equalsIcon"
+            app:layout_constraintTop_toBottomOf="@+id/equalsIcon"
             tools:text="Stats" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

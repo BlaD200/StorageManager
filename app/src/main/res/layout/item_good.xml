@@ -6,8 +6,8 @@
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:elevation="3dp"
-        app:cardCornerRadius="10dp"
+        android:elevation="@dimen/card_elevation"
+        app:cardCornerRadius="@dimen/card_corner_radius"
         app:cardUseCompatPadding="true">
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -18,11 +18,41 @@
                 android:id="@+id/textGoodName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/btnPlus"
+                android:layout_marginStart="@dimen/margin_medium"
+                android:textSize="@dimen/size_small"
+                app:layout_constraintBottom_toTopOf="@+id/textView"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 tools:text="Good's Name" />
+
+            <TextView
+                android:id="@+id/textView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="@+id/textGoodName"
+                app:layout_constraintTop_toBottomOf="@+id/textGoodName"
+                tools:text="Group" />
+
+            <TextView
+                android:id="@+id/textAmount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/margin_medium_plus"
+                app:layout_constraintBottom_toBottomOf="@+id/textGoodName"
+                app:layout_constraintEnd_toStartOf="@+id/btnPlus"
+                app:layout_constraintTop_toTopOf="@+id/textGoodName"
+                tools:text="Amount" />
+
+            <TextView
+                android:id="@+id/textPrice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toBottomOf="@+id/textView"
+                app:layout_constraintEnd_toEndOf="@+id/textAmount"
+                app:layout_constraintStart_toStartOf="@+id/textAmount"
+                app:layout_constraintTop_toTopOf="@+id/textView"
+                tools:text="Price" />
 
             <ImageButton
                 android:id="@+id/btnPlus"
@@ -32,12 +62,12 @@
                 android:layout_marginEnd="@dimen/margin_medium"
                 android:layout_marginBottom="@dimen/margin_medium"
                 android:adjustViewBounds="true"
+                android:contentDescription="@string/plus_button"
                 android:scaleType="fitCenter"
                 android:src="@drawable/ic_plus"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/btnMinus"
-                app:layout_constraintTop_toTopOf="parent"
-                android:contentDescription="@string/plus_button" />
+                app:layout_constraintTop_toTopOf="parent" />
 
             <ImageButton
                 android:id="@+id/btnMinus"
@@ -45,12 +75,12 @@
                 android:layout_height="40dp"
                 android:layout_marginEnd="@dimen/margin_medium_plus"
                 android:adjustViewBounds="true"
+                android:contentDescription="@string/minus_button"
                 android:scaleType="fitCenter"
                 android:src="@drawable/ic_line"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                android:contentDescription="@string/minus_button" />
+                app:layout_constraintTop_toTopOf="parent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

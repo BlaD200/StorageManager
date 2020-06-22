@@ -19,24 +19,43 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/textProducer"
+            android:id="@+id/textGroup"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_small"
-            android:text="@string/producer"
-            app:layout_constraintEnd_toStartOf="@+id/spinnerProducer"
+            android:layout_marginTop="@dimen/margin_medium_plus"
+            android:text="@string/group"
+            app:layout_constraintEnd_toStartOf="@+id/spinnerGroup"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/edit_query" />
+
+        <Spinner
+            android:id="@+id/spinnerGroup"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="@+id/textGroup"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/textGroup"
+            app:layout_constraintTop_toTopOf="@+id/textGroup" />
+
+        <TextView
+            android:id="@+id/textProducer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_medium_plus"
+            android:text="@string/producer"
+            app:layout_constraintEnd_toEndOf="@+id/textGroup"
+            app:layout_constraintStart_toStartOf="@+id/textGroup"
+            app:layout_constraintTop_toBottomOf="@+id/textGroup" />
 
         <Spinner
             android:id="@+id/spinnerProducer"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintBottom_toBottomOf="@+id/textProducer"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/textProducer"
+            app:layout_constraintEnd_toEndOf="@+id/spinnerGroup"
+            app:layout_constraintStart_toStartOf="@+id/spinnerGroup"
             app:layout_constraintTop_toTopOf="@+id/textProducer" />
 
         <TextView

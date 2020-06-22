@@ -10,10 +10,12 @@
 
         <TextView
             android:id="@+id/textName"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_medium"
-            android:gravity="center"
+            android:layout_marginTop="@dimen/margin_large"
+            android:textSize="@dimen/size_large"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="Group's Name" />
 
@@ -21,10 +23,11 @@
             android:id="@+id/textDescription"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_medium"
+            android:layout_marginTop="@dimen/margin_large"
             android:paddingLeft="@dimen/margin_small"
             android:paddingRight="@dimen/margin_small"
-            android:gravity="center"
+            android:textAlignment="center"
+            android:textSize="@dimen/size_small"
             app:layout_constraintTop_toBottomOf="@+id/textName"
             tools:text="Description Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis suscipit lectus non est elementum congue. Sed at imperdiet quam. Pellentesque ullamcorper dolor nec sem euismod, nec feugiat ex ultricies. Proin ut efficitur ligula. Sed feugiat, metus a sagittis porttitor, ante metus vestibulum mi, sit amet faucibus nibh sapien eget" />
 
@@ -32,9 +35,11 @@
             android:id="@+id/textTotalPrice"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/margin_medium_plus"
-            android:layout_marginTop="@dimen/margin_medium"
+            android:layout_marginTop="@dimen/margin_large"
             android:text="@string/total_price"
+            android:textSize="@dimen/size_medium"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.30"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textDescription" />
 
@@ -43,18 +48,56 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/margin_medium"
+            android:textSize="@dimen/size_medium"
             app:layout_constraintBottom_toBottomOf="@+id/textTotalPrice"
             app:layout_constraintStart_toEndOf="@+id/textTotalPrice"
             app:layout_constraintTop_toTopOf="@+id/textTotalPrice"
             tools:text="123132 $" />
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/goods_list"
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cardGoods"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_medium"
-            app:layout_constraintTop_toBottomOf="@+id/textTotalPrice"
-            tools:listitem="@layout/item_good" />
+            android:layout_marginStart="@dimen/margin_large"
+            android:layout_marginTop="@dimen/margin_large"
+            android:layout_marginEnd="@dimen/margin_large"
+            android:elevation="@dimen/card_elevation"
+            app:cardCornerRadius="@dimen/card_corner_radius"
+            app:cardUseCompatPadding="true"
+            app:layout_constraintTop_toBottomOf="@+id/textTotalPrice">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <ImageView
+                    android:id="@+id/iconGoods"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_marginTop="@dimen/margin_medium"
+                    android:layout_marginBottom="@dimen/margin_medium"
+                    android:contentDescription="@string/goods_icon"
+                    android:src="@drawable/ic_goods"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.35"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/textGoods"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/margin_medium"
+                    android:text="@string/goods"
+                    android:textSize="@dimen/size_medium"
+                    app:layout_constraintBottom_toBottomOf="@+id/iconGoods"
+                    app:layout_constraintStart_toEndOf="@+id/iconGoods"
+                    app:layout_constraintTop_toTopOf="@+id/iconGoods" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </androidx.cardview.widget.CardView>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

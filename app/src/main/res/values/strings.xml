@@ -22,11 +22,13 @@
     <string name="edit">Edit</string>
     <string name="delete">Delete</string>
     <string name="logout">Logout</string>
-    <string name="all_goods">All Goods</string>
+    <string name="goods">Goods</string>
     <string name="groups">Groups</string>
     <string name="group_creation">Group Creation</string>
     <string name="name">Name</string>
     <string name="description">Description</string>
     <string name="create">Create</string>
     <string name="cancel">Cancel</string>
+    <string name="goods_icon">Goods Icon</string>
+    <string name="group">Group</string>
 </resources>
