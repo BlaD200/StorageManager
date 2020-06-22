@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/allGoodsFragment">
+
+    <fragment
+        android:id="@+id/allGoodsFragment"
+        android:name="com.example.storagemanager.fragments.AllGoodsFragment"
+        android:label="AllGoodsFragment"
+        tools:layout="@layout/fragment_all_goods" />
+
+    <fragment
+        android:id="@+id/groupsFragment"
+        android:name="com.example.storagemanager.fragments.GroupsFragment"
+        android:label="GroupsFragment"
+        tools:layout="@layout/fragment_groups"/>
+
+</navigation>
