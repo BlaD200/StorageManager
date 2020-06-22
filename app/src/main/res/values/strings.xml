@@ -24,4 +24,9 @@
     <string name="logout">Logout</string>
     <string name="all_goods">All Goods</string>
     <string name="groups">Groups</string>
+    <string name="group_creation">Group Creation</string>
+    <string name="name">Name</string>
+    <string name="description">Description</string>
+    <string name="create">Create</string>
+    <string name="cancel">Cancel</string>
 </resources>
