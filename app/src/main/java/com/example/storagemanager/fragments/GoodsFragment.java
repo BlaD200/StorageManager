@@ -103,8 +103,8 @@ public class GoodsFragment extends Fragment implements
             return mData.size();
         }
 
-        public class GoodViewHolder extends RecyclerView.ViewHolder
-                implements View.OnClickListener, View.OnLongClickListener {
+        public class GoodViewHolder extends RecyclerView.ViewHolder implements
+                View.OnClickListener, View.OnLongClickListener {
 
             private final ItemGoodBinding mBinding;
 

@@ -8,6 +8,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.PopupMenu;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -18,12 +19,14 @@ import com.example.storagemanager.databinding.FragmentGroupsBinding;
 import com.example.storagemanager.databinding.ItemGroupBinding;
 import com.example.storagemanager.entities.GroupEntity;
 import com.example.storagemanager.fragments.dialogs.CreateGroupDialog;
+import com.example.storagemanager.fragments.dialogs.DeleteDialog;
 
 import java.util.LinkedList;
 import java.util.List;
 
-public class GroupsFragment extends Fragment
-        implements CreateGroupDialog.CreateGroupDialogListener {
+public class GroupsFragment extends Fragment implements
+        CreateGroupDialog.CreateGroupDialogListener,
+        DeleteDialog.DeleteDialogListener {
 
     private FragmentGroupsBinding mBinding;
 
@@ -63,8 +66,12 @@ public class GroupsFragment extends Fragment
         Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show();
     }
 
+    @Override
+    public void delete(String id) {
+        Toast.makeText(requireContext(), "Delete Group: " + id, Toast.LENGTH_SHORT).show();
+    }
 
-    static class Adapter extends RecyclerView.Adapter<Adapter.GroupViewHolder> {
+    class Adapter extends RecyclerView.Adapter<Adapter.GroupViewHolder> {
 
         private List<GroupEntity> mData;
 
@@ -94,18 +101,49 @@ public class GroupsFragment extends Fragment
             return mData.size();
         }
 
-        public static class GroupViewHolder extends RecyclerView.ViewHolder {
+        public class GroupViewHolder extends RecyclerView.ViewHolder implements
+                View.OnClickListener, View.OnLongClickListener {
 
             private final ItemGroupBinding mBinding;
 
             public GroupViewHolder(ItemGroupBinding binding) {
                 super(binding.getRoot());
                 mBinding = binding;
+                binding.getRoot().setOnClickListener(this);
+                binding.getRoot().setOnLongClickListener(this);
             }
 
             public void bind(GroupEntity groupEntity) {
                 mBinding.setGroup(groupEntity);
                 mBinding.executePendingBindings();
+            }
+
+            @Override
+            public void onClick(View v) {
+                // TODO navigation
+            }
+
+            @Override
+            public boolean onLongClick(View v) {
+                PopupMenu popup = new PopupMenu(requireContext(), v);
+
+                popup.inflate(R.menu.menu_list_item_popup);
+
+                popup.setOnMenuItemClickListener(item -> {
+                    if (item.getItemId() == R.id.action_edit) {
+
+                    } else {
+                        String groupName = mBinding.textName.getText().toString();
+                        DeleteDialog dialog = new DeleteDialog(groupName, "Delete Group");
+                        dialog.show(GroupsFragment.this.getChildFragmentManager(), DELETE_GROUP_DIALOG_TAG);
+                    }
+
+                    return true;
+                });
+
+                popup.show();
+
+                return true;
             }
         }
     }
@@ -128,4 +166,5 @@ public class GroupsFragment extends Fragment
     }
 
     public static final String CREATE_GROUP_DIALOG_TAG = "CREATE_GROUP_DIALOG";
+    public static final String DELETE_GROUP_DIALOG_TAG = "DELETE_GROUP_DIALOG";
 }
