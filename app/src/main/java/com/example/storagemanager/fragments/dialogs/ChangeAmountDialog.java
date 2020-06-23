@@ -19,13 +19,13 @@ import java.util.Objects;
 
 public class ChangeAmountDialog extends DialogFragment {
 
-    public interface ChangeAmountDialogListener {
+    public interface ChangeAmountListener {
         void addAmount(int amount);
 
         void removeAmount(int amount);
     }
 
-    private ChangeAmountDialogListener mListener;
+    private ChangeAmountListener mListener;
     private final int mAmount;
     private final boolean mToAdd;
 
@@ -69,10 +69,10 @@ public class ChangeAmountDialog extends DialogFragment {
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
         try {
-            mListener = (ChangeAmountDialogListener) getParentFragment();
+            mListener = (ChangeAmountListener) getParentFragment();
         } catch (ClassCastException e) {
             throw new ClassCastException(context.toString()
-                    + " must implement ChangeAmountDialogListener");
+                    + " must implement ChangeAmountListener");
         }
     }
 }

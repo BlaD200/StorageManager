@@ -2,9 +2,9 @@ package com.example.storagemanager.fragments.dialogs;
 
 import android.annotation.SuppressLint;
 import android.app.Dialog;
-import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
@@ -17,17 +17,30 @@ import com.example.storagemanager.entities.GoodEntity;
 
 import java.util.Objects;
 
-public class UpdateGoodDialog extends DialogFragment {
+public class GoodDialog extends DialogFragment {
 
-    public interface UpdateGoodDialogListener {
+    public interface CreateGoodListener {
+        void createGoodData(String name, String group, String description,
+                            String producer, int amount, int price);
+    }
+
+    public interface UpdateGoodListener {
         void updateGoodData(String name, String group, String description,
                             String producer, int amount, int price);
     }
 
-    private UpdateGoodDialogListener mListener;
+    private CreateGoodListener mCreateListener;
+    private UpdateGoodListener mUpdateListener;
+
     private final GoodEntity mGoodEntity;
 
-    public UpdateGoodDialog(GoodEntity goodEntity) {
+    public GoodDialog(CreateGoodListener createListener, GoodEntity goodEntity) {
+        mCreateListener = createListener;
+        mGoodEntity = goodEntity;
+    }
+
+    public GoodDialog(UpdateGoodListener updateListener, GoodEntity goodEntity) {
+        mUpdateListener = updateListener;
         mGoodEntity = goodEntity;
     }
 
@@ -43,36 +56,30 @@ public class UpdateGoodDialog extends DialogFragment {
         return new AlertDialog
                 .Builder(requireActivity())
                 .setView(binding.getRoot())
-                .setPositiveButton(R.string.create, (dialog, id) -> {
+                .setPositiveButton(mCreateListener != null ?
+                        R.string.create : R.string.update, (dialog, id) -> {
                     String name = binding.editName.getText().toString();
                     String group = binding.spinnerGroup.getSelectedItem().toString();
                     String description = binding.editDescription.getText().toString();
                     String producer = binding.spinnerProducer.getSelectedItem().toString();
 
-                    int amount = -1;
-                    int price = -1;
                     try {
-                        amount = Integer.parseInt(binding.editAmount.getText().toString());
-                        price = Integer.parseInt(binding.editPrice.getText().toString());
-                    } catch (NumberFormatException ignored) {
-                    }
+                        int amount = Integer.parseInt(binding.editAmount.getText().toString());
+                        int price = Integer.parseInt(binding.editPrice.getText().toString());
 
-                    mListener.updateGoodData(name, group, description, producer, amount, price);
+                        if (mCreateListener != null)
+                            mCreateListener.createGoodData(name, group, description,
+                                    producer, amount, price);
+                        else
+                            mUpdateListener.updateGoodData(name, group, description,
+                                    producer, amount, price);
+                    } catch (NumberFormatException ignored) {
+                        Toast.makeText(requireContext(), "Amount and price cannot be empty",
+                                Toast.LENGTH_SHORT).show();
+                    }
                 })
                 .setNegativeButton(R.string.cancel, (dialog, id) ->
-                        Objects.requireNonNull(UpdateGoodDialog.this.getDialog()).cancel())
+                        Objects.requireNonNull(GoodDialog.this.getDialog()).cancel())
                 .create();
     }
-
-    @Override
-    public void onAttach(@NonNull Context context) {
-        super.onAttach(context);
-        try {
-            mListener = (UpdateGoodDialogListener) getParentFragment();
-        } catch (ClassCastException e) {
-            throw new ClassCastException(context.toString()
-                    + " must implement UpdateGoodDialogListener");
-        }
-    }
 }
-

@@ -23,19 +23,18 @@ import com.example.storagemanager.databinding.FragmentGoodsBinding;
 import com.example.storagemanager.databinding.ItemGoodBinding;
 import com.example.storagemanager.entities.GoodEntity;
 import com.example.storagemanager.fragments.dialogs.ChangeAmountDialog;
-import com.example.storagemanager.fragments.dialogs.CreateGoodDialog;
 import com.example.storagemanager.fragments.dialogs.DeleteDialog;
-import com.example.storagemanager.fragments.dialogs.UpdateGoodDialog;
+import com.example.storagemanager.fragments.dialogs.GoodDialog;
 import com.google.android.material.appbar.AppBarLayout;
 
 import java.util.LinkedList;
 import java.util.List;
 
 public class GoodsFragment extends Fragment implements
-        CreateGoodDialog.CreateGoodDialogListener,
-        UpdateGoodDialog.UpdateGoodDialogListener,
-        ChangeAmountDialog.ChangeAmountDialogListener,
-        DeleteDialog.DeleteDialogListener {
+        GoodDialog.CreateGoodListener,
+        GoodDialog.UpdateGoodListener,
+        ChangeAmountDialog.ChangeAmountListener,
+        DeleteDialog.DeleteListener {
 
     private FragmentGoodsBinding mBinding;
     private AppBarLayout mAppBarLayout;
@@ -70,8 +69,8 @@ public class GoodsFragment extends Fragment implements
         recyclerView.setAdapter(new GoodsFragment.Adapter(testData()));
 
         mBinding.fab.setOnClickListener(v -> {
-            CreateGoodDialog dialog = new CreateGoodDialog();
-            dialog.show(GoodsFragment.this.getChildFragmentManager(), CREATE_GOOD_DIALOG_TAG);
+            GoodDialog dialog = new GoodDialog((GoodDialog.CreateGoodListener) this, null);
+            dialog.show(GoodsFragment.this.getChildFragmentManager(), GOOD_DIALOG_TAG);
         });
     }
 
@@ -213,8 +212,8 @@ public class GoodsFragment extends Fragment implements
 
                 popup.setOnMenuItemClickListener(item -> {
                     if (item.getItemId() == R.id.action_edit) {
-                        UpdateGoodDialog dialog = new UpdateGoodDialog(mGoodEntity);
-                        dialog.show(GoodsFragment.this.getChildFragmentManager(), CREATE_GOOD_DIALOG_TAG);
+                        GoodDialog dialog = new GoodDialog((GoodDialog.UpdateGoodListener) GoodsFragment.this, mGoodEntity);
+                        dialog.show(GoodsFragment.this.getChildFragmentManager(), GOOD_DIALOG_TAG);
                     } else {
                         DeleteDialog dialog = new DeleteDialog(mGoodEntity.getName(), "Delete Good");
                         dialog.show(GoodsFragment.this.getChildFragmentManager(), DELETE_GOOD_DIALOG_TAG);
@@ -263,7 +262,7 @@ public class GoodsFragment extends Fragment implements
 
     private boolean mIsExpanded = true;
 
-    private static final String CREATE_GOOD_DIALOG_TAG = "CREATE_GOOD_DIALOG";
+    private static final String GOOD_DIALOG_TAG = "GOOD_DIALOG";
     private static final String DELETE_GOOD_DIALOG_TAG = "DELETE_GOOD_DIALOG";
     private static final String CHANGE_AMOUNT_DIALOG_TAG = "CHANGE_AMOUNT_DIALOG";
 }

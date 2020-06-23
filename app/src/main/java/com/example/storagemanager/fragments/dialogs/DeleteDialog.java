@@ -14,13 +14,13 @@ import java.util.Objects;
 
 public class DeleteDialog extends DialogFragment {
 
-    public interface DeleteDialogListener {
+    public interface DeleteListener {
         void delete(String id);
     }
 
     private final String mMessage;
     private final String mId;
-    private DeleteDialogListener mListener;
+    private DeleteListener mListener;
 
     public DeleteDialog(String id, String message) {
         mId = id;
@@ -46,7 +46,7 @@ public class DeleteDialog extends DialogFragment {
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
         try {
-            mListener = (DeleteDialog.DeleteDialogListener) getParentFragment();
+            mListener = (DeleteListener) getParentFragment();
         } catch (ClassCastException e) {
             throw new ClassCastException(context.toString()
                     + " must implement DeleteDialogListener");

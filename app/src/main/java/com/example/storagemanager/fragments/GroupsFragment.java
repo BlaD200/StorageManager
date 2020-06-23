@@ -21,17 +21,16 @@ import com.example.storagemanager.R;
 import com.example.storagemanager.databinding.FragmentGroupsBinding;
 import com.example.storagemanager.databinding.ItemGroupBinding;
 import com.example.storagemanager.entities.GroupEntity;
-import com.example.storagemanager.fragments.dialogs.CreateGroupDialog;
 import com.example.storagemanager.fragments.dialogs.DeleteDialog;
-import com.example.storagemanager.fragments.dialogs.UpdateGroupDialog;
+import com.example.storagemanager.fragments.dialogs.GroupDialog;
 
 import java.util.LinkedList;
 import java.util.List;
 
 public class GroupsFragment extends Fragment implements
-        CreateGroupDialog.CreateGroupDialogListener,
-        UpdateGroupDialog.UpdateGroupDialogListener,
-        DeleteDialog.DeleteDialogListener {
+        GroupDialog.CreateGroupListener,
+        GroupDialog.UpdateGroupListener,
+        DeleteDialog.DeleteListener {
 
     private FragmentGroupsBinding mBinding;
 
@@ -55,8 +54,8 @@ public class GroupsFragment extends Fragment implements
         recyclerView.setAdapter(new Adapter(testData()));
 
         mBinding.fab.setOnClickListener(v -> {
-            CreateGroupDialog dialog = new CreateGroupDialog();
-            dialog.show(GroupsFragment.this.getChildFragmentManager(), CREATE_GROUP_DIALOG_TAG);
+            GroupDialog dialog = new GroupDialog((GroupDialog.CreateGroupListener) this, null);
+            dialog.show(GroupsFragment.this.getChildFragmentManager(), GROUP_DIALOG_TAG);
         });
     }
 
@@ -154,8 +153,8 @@ public class GroupsFragment extends Fragment implements
 
                 popup.setOnMenuItemClickListener(item -> {
                     if (item.getItemId() == R.id.action_edit) {
-                        UpdateGroupDialog dialog = new UpdateGroupDialog(mGroupEntity);
-                        dialog.show(GroupsFragment.this.getChildFragmentManager(), CREATE_GROUP_DIALOG_TAG);
+                        GroupDialog dialog = new GroupDialog((GroupDialog.UpdateGroupListener) GroupsFragment.this, mGroupEntity);
+                        dialog.show(GroupsFragment.this.getChildFragmentManager(), GROUP_DIALOG_TAG);
                     } else {
                         DeleteDialog dialog = new DeleteDialog(mGroupEntity.getName(), "Delete Group");
                         dialog.show(GroupsFragment.this.getChildFragmentManager(), DELETE_GROUP_DIALOG_TAG);
@@ -194,6 +193,6 @@ public class GroupsFragment extends Fragment implements
         super.onPrepareOptionsMenu(menu);
     }
 
-    public static final String CREATE_GROUP_DIALOG_TAG = "CREATE_GROUP_DIALOG";
+    public static final String GROUP_DIALOG_TAG = "GROUP_DIALOG";
     public static final String DELETE_GROUP_DIALOG_TAG = "DELETE_GROUP_DIALOG";
 }
