@@ -82,7 +82,7 @@
             android:autofillHints="@string/amount"
             android:hint="@string/amount"
             android:inputType="number"
-            android:text="@{String.valueOf(good.amount)}"
+            android:text='@{good != null ? String.valueOf(good.amount) : ""}'
             app:layout_constraintEnd_toStartOf="@+id/editPrice"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
@@ -95,7 +95,7 @@
             android:autofillHints="@string/price"
             android:hint="@string/price"
             android:inputType="number"
-            android:text="@{String.valueOf(good.price)}"
+            android:text='@{good != null ? String.valueOf(good.price) : ""}'
             app:layout_constraintBottom_toBottomOf="@+id/editAmount"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"

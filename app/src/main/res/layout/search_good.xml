@@ -8,15 +8,28 @@
 
         <EditText
             android:id="@+id/edit_query"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/margin_small"
+            android:layout_marginStart="@dimen/margin_small"
             android:layout_marginTop="@dimen/margin_small"
-            android:layout_marginRight="@dimen/margin_small"
+            android:layout_marginEnd="@dimen/margin_small"
             android:autofillHints="@string/edit_query_hint"
             android:hint="@string/edit_query_hint"
             android:inputType="text"
+            app:layout_constraintEnd_toStartOf="@+id/btnSearch"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageButton
+            android:id="@+id/btnSearch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/margin_medium"
+            android:contentDescription="@string/button_search"
+            android:src="@drawable/ic_search"
+            app:layout_constraintBottom_toBottomOf="@+id/edit_query"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/edit_query" />
 
         <TextView
             android:id="@+id/textGroup"
@@ -153,16 +166,6 @@
             app:layout_constraintEnd_toEndOf="@+id/editAmountMax"
             app:layout_constraintStart_toStartOf="@+id/editAmountMax"
             app:layout_constraintTop_toTopOf="@+id/textPrice" />
-
-        <Button
-            android:id="@+id/btnSearch"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_medium"
-            android:layout_marginEnd="@dimen/margin_medium"
-            android:text="@string/search"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/editPriceMax" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

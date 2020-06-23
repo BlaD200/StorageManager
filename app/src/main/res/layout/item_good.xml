@@ -48,7 +48,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="@dimen/margin_medium_plus"
-                android:text="@{String.valueOf(good.amount)}"
+                android:text='@{String.valueOf(good.amount) + " s.u."}'
                 app:layout_constraintBottom_toBottomOf="@+id/textGoodName"
                 app:layout_constraintEnd_toStartOf="@+id/btnPlus"
                 app:layout_constraintTop_toTopOf="@+id/textGoodName"
@@ -58,7 +58,7 @@
                 android:id="@+id/textPrice"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@{String.valueOf(good.price)}"
+                android:text='@{String.valueOf(good.price) + " $"}'
                 app:layout_constraintBottom_toBottomOf="@+id/textView"
                 app:layout_constraintEnd_toEndOf="@+id/textAmount"
                 app:layout_constraintStart_toStartOf="@+id/textAmount"

@@ -22,6 +22,7 @@ import com.example.storagemanager.R;
 import com.example.storagemanager.databinding.FragmentGoodsBinding;
 import com.example.storagemanager.databinding.ItemGoodBinding;
 import com.example.storagemanager.entities.GoodEntity;
+import com.example.storagemanager.fragments.dialogs.ChangeAmountDialog;
 import com.example.storagemanager.fragments.dialogs.CreateGoodDialog;
 import com.example.storagemanager.fragments.dialogs.DeleteDialog;
 import com.example.storagemanager.fragments.dialogs.UpdateGoodDialog;
@@ -33,6 +34,7 @@ import java.util.List;
 public class GoodsFragment extends Fragment implements
         CreateGoodDialog.CreateGoodDialogListener,
         UpdateGoodDialog.UpdateGoodDialogListener,
+        ChangeAmountDialog.ChangeAmountDialogListener,
         DeleteDialog.DeleteDialogListener {
 
     private FragmentGoodsBinding mBinding;
@@ -123,6 +125,18 @@ public class GoodsFragment extends Fragment implements
         Toast.makeText(requireContext(), "Delete good: " + id, Toast.LENGTH_SHORT).show();
     }
 
+    @Override
+    public void addAmount(int amount) {
+        Toast.makeText(requireContext(), "Add amount: " + amount, Toast.LENGTH_SHORT).show();
+        // TODO add amount
+    }
+
+    @Override
+    public void removeAmount(int amount) {
+        Toast.makeText(requireContext(), "Remove amount: " + amount, Toast.LENGTH_SHORT).show();
+        // TODO add amount
+    }
+
     class Adapter extends RecyclerView.Adapter<Adapter.GoodViewHolder> {
 
         private List<GoodEntity> mData;
@@ -162,8 +176,19 @@ public class GoodsFragment extends Fragment implements
             public GoodViewHolder(ItemGoodBinding binding) {
                 super(binding.getRoot());
                 mBinding = binding;
+
                 binding.getRoot().setOnClickListener(this);
                 binding.getRoot().setOnLongClickListener(this);
+
+                binding.btnPlus.setOnClickListener(v -> {
+                    ChangeAmountDialog dialog = new ChangeAmountDialog(mGoodEntity.getAmount(), true);
+                    dialog.show(GoodsFragment.this.getChildFragmentManager(), CHANGE_AMOUNT_DIALOG_TAG);
+                });
+
+                binding.btnMinus.setOnClickListener(v -> {
+                    ChangeAmountDialog dialog = new ChangeAmountDialog(mGoodEntity.getAmount(), false);
+                    dialog.show(GoodsFragment.this.getChildFragmentManager(), CHANGE_AMOUNT_DIALOG_TAG);
+                });
             }
 
             public void bind(GoodEntity goodEntity) {
@@ -240,4 +265,5 @@ public class GoodsFragment extends Fragment implements
 
     private static final String CREATE_GOOD_DIALOG_TAG = "CREATE_GOOD_DIALOG";
     private static final String DELETE_GOOD_DIALOG_TAG = "DELETE_GOOD_DIALOG";
+    private static final String CHANGE_AMOUNT_DIALOG_TAG = "CHANGE_AMOUNT_DIALOG";
 }

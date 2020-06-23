@@ -36,4 +36,10 @@
     <string name="login">Login</string>
     <string name="password">Password</string>
     <string name="welcome">Welcome!</string>
+    <string name="button_search">Button Search</string>
+    <string name="current_amount">Current Amount</string>
+    <string name="change_amount">Change Amount</string>
+    <string name="add">Add</string>
+    <string name="remove">Remove</string>
+    <string name="number">Number</string>
 </resources>

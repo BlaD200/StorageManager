@@ -35,6 +35,8 @@ public class MainActivity extends AppCompatActivity {
         ActivityMainBinding binding = DataBindingUtil
                 .setContentView(this, R.layout.activity_main);
 
+        // TODO + -
+
         SharedPreferences preferences = getSharedPreferences(USER_DATA_KEY, MODE_PRIVATE);
         mLoginViewModel = new ViewModelProvider(this,
                 new LoginVMFactory(preferences)

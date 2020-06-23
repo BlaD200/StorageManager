@@ -68,7 +68,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/margin_large"
-            android:text="@{String.valueOf(good.amount)}"
+            android:text='@{String.valueOf(good.amount) + " s.u."}'
             android:textSize="@dimen/size_medium"
             app:layout_constraintEnd_toEndOf="@+id/textProducer"
             app:layout_constraintStart_toStartOf="@+id/textProducer"
@@ -91,7 +91,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/margin_medium"
-            android:text="@{String.valueOf(good.price) + '$'}"
+            android:text='@{String.valueOf(good.price) + " $"}'
             android:textSize="@dimen/size_medium"
             app:layout_constraintEnd_toEndOf="@+id/multiplyIcon"
             app:layout_constraintStart_toStartOf="@+id/multiplyIcon"
@@ -114,7 +114,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/margin_medium"
-            android:text="@{String.valueOf(good.amount * good.price) + '$'}"
+            android:text='@{String.valueOf(good.amount * good.price) + " $"}'
             android:textSize="@dimen/size_medium"
             app:layout_constraintEnd_toEndOf="@+id/equalsIcon"
             app:layout_constraintStart_toStartOf="@+id/equalsIcon"

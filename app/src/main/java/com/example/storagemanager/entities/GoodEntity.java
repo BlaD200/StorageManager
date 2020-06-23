@@ -10,6 +10,6 @@ public class GoodEntity {
     private String group;
     private String description;
     private String producer;
-    private int amount;
-    private int price;
+    private Integer amount;
+    private Integer price;
 }
