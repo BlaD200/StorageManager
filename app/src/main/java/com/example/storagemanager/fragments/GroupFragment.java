@@ -9,7 +9,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
-import androidx.navigation.NavDirections;
 import androidx.navigation.Navigation;
 
 import com.example.storagemanager.R;
@@ -31,6 +30,11 @@ public class GroupFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        String groupId = GroupFragmentArgs.fromBundle(requireArguments()).getGroupId();
+        // TODO setup data
+        //  mBinding.setGroup();
+        //  mBinding.setTotalPrice();
 
         mBinding.cardGoods.setOnClickListener(v -> {
             // TODO pass id

@@ -52,6 +52,12 @@ public class GoodsFragment extends Fragment implements
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        if (getArguments() != null && GoodsFragmentArgs
+                .fromBundle(getArguments()).getGroupId() != null) {
+            String groupId = GoodsFragmentArgs.fromBundle(getArguments()).getGroupId();
+            // TODO get group name
+        }
+
         mAppBarLayout = mBinding.appBarLayout;
         mAppBarLayout.addOnOffsetChangedListener((appBarLayout, verticalOffset) ->
                 mIsExpanded = verticalOffset == 0);
