@@ -3,18 +3,42 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/allGoodsFragment">
+    app:startDestination="@id/goodsFragment">
 
     <fragment
-        android:id="@+id/allGoodsFragment"
+        android:id="@+id/goodsFragment"
         android:name="com.example.storagemanager.fragments.GoodsFragment"
-        android:label="AllGoodsFragment"
+        android:label="GoodsFragment"
         tools:layout="@layout/fragment_goods" />
 
     <fragment
         android:id="@+id/groupsFragment"
         android:name="com.example.storagemanager.fragments.GroupsFragment"
         android:label="GroupsFragment"
-        tools:layout="@layout/fragment_groups"/>
+        tools:layout="@layout/fragment_groups" />
+
+    <fragment
+        android:id="@+id/goodFragment"
+        android:name="com.example.storagemanager.fragments.GoodFragment"
+        android:label="GoodFragment"
+        tools:layout="@layout/fragment_good" />
+
+    <fragment
+        android:id="@+id/groupFragment"
+        android:name="com.example.storagemanager.fragments.GroupFragment"
+        android:label="GroupFragment"
+        tools:layout="@layout/fragment_group" />
+
+    <fragment
+        android:id="@+id/loginFragment"
+        android:name="com.example.storagemanager.fragments.LoginFragment"
+        android:label="LoginFragment"
+        tools:layout="@layout/fragment_login" >
+        <action
+            android:id="@+id/action_loginFragment_to_goodsFragment"
+            app:destination="@id/goodsFragment"
+            app:popUpTo="@id/loginFragment"
+            app:popUpToInclusive="true" />
+    </fragment>
 
 </navigation>

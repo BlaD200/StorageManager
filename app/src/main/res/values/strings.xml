@@ -33,4 +33,7 @@
     <string name="goods_icon">Goods Icon</string>
     <string name="group">Group</string>
     <string name="good_creation">Good Creation</string>
+    <string name="login">Login</string>
+    <string name="password">Password</string>
+    <string name="welcome">Welcome!</string>
 </resources>

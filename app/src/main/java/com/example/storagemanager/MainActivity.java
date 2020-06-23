@@ -1,5 +1,6 @@
 package com.example.storagemanager;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -8,16 +9,21 @@ import android.view.View;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.databinding.DataBindingUtil;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
+import androidx.navigation.NavOptions;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
 import com.example.storagemanager.databinding.ActivityMainBinding;
+import com.example.storagemanager.viewmodels.LoginViewModel;
+import com.example.storagemanager.viewmodels.factories.LoginVMFactory;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class MainActivity extends AppCompatActivity {
 
+    private LoginViewModel mLoginViewModel;
     private BottomNavigationView mBottomNav;
     private NavController mNavController;
     private AppBarConfiguration mAppBarConfig;
@@ -29,11 +35,16 @@ public class MainActivity extends AppCompatActivity {
         ActivityMainBinding binding = DataBindingUtil
                 .setContentView(this, R.layout.activity_main);
 
+        SharedPreferences preferences = getSharedPreferences(USER_DATA_KEY, MODE_PRIVATE);
+        mLoginViewModel = new ViewModelProvider(this,
+                new LoginVMFactory(preferences)
+        ).get(LoginViewModel.class);
+
         Toolbar toolbar = binding.toolbar;
         mBottomNav = binding.bottomNavigationView;
         mNavController = Navigation.findNavController(this, R.id.navHostFragment);
         mAppBarConfig = new AppBarConfiguration
-                .Builder(R.id.allGoodsFragment, R.id.groupsFragment)
+                .Builder(R.id.goodsFragment, R.id.groupsFragment)
                 .build();
 
         setSupportActionBar(binding.toolbar);
@@ -42,6 +53,9 @@ public class MainActivity extends AppCompatActivity {
         NavigationUI.setupWithNavController(mBottomNav, mNavController);
 
         setupDestinations();
+
+        if (!mLoginViewModel.isAuthenticated())
+            navigateToLogin();
     }
 
     @Override
@@ -52,8 +66,10 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.action_logout) ;
-        // TODO logout
+        if (item.getItemId() == R.id.action_logout) {
+            mLoginViewModel.logout();
+            navigateToLogin();
+        }
 
         return super.onOptionsItemSelected(item);
     }
@@ -66,4 +82,14 @@ public class MainActivity extends AppCompatActivity {
                 mBottomNav.setVisibility(View.GONE);
         });
     }
+
+    private void navigateToLogin() {
+        NavOptions navOptions = new NavOptions
+                .Builder()
+                .setPopUpTo(R.id.goodsFragment, true)
+                .build();
+        mNavController.navigate(R.id.loginFragment, null, navOptions);
+    }
+
+    private static final String USER_DATA_KEY = "com.example.storagemanager.userdata";
 }
