@@ -20,12 +20,14 @@ import com.example.storagemanager.databinding.ItemGoodBinding;
 import com.example.storagemanager.entities.GoodEntity;
 import com.example.storagemanager.fragments.dialogs.CreateGoodDialog;
 import com.example.storagemanager.fragments.dialogs.DeleteDialog;
+import com.example.storagemanager.fragments.dialogs.UpdateGoodDialog;
 
 import java.util.LinkedList;
 import java.util.List;
 
 public class GoodsFragment extends Fragment implements
         CreateGoodDialog.CreateGoodDialogListener,
+        UpdateGoodDialog.UpdateGoodDialogListener,
         DeleteDialog.DeleteDialogListener {
 
     private FragmentGoodsBinding mBinding;
@@ -55,7 +57,7 @@ public class GoodsFragment extends Fragment implements
     }
 
     @Override
-    public void getGoodData(String name, String group, String description, String producer, int amount, int price) {
+    public void createGoodData(String name, String group, String description, String producer, int amount, int price) {
         String message;
 
         if (name.isEmpty() || group.isEmpty() || description.isEmpty())
@@ -65,7 +67,21 @@ public class GoodsFragment extends Fragment implements
         else
             message = new GoodEntity(name, group, description, producer, amount, price).toString();
 
-        Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show();
+        Toast.makeText(requireContext(), "Create: " + message, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void updateGoodData(String name, String group, String description, String producer, int amount, int price) {
+        String message;
+
+        if (name.isEmpty() || group.isEmpty() || description.isEmpty())
+            message = "Name, group, description or producer cannot be empty";
+        else if (amount == -1 || price == -1)
+            message = "Amount or price cannot be empty";
+        else
+            message = new GoodEntity(name, group, description, producer, amount, price).toString();
+
+        Toast.makeText(requireContext(), "Update: " + message, Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -107,6 +123,7 @@ public class GoodsFragment extends Fragment implements
                 View.OnClickListener, View.OnLongClickListener {
 
             private final ItemGoodBinding mBinding;
+            private GoodEntity mGoodEntity;
 
             public GoodViewHolder(ItemGoodBinding binding) {
                 super(binding.getRoot());
@@ -116,6 +133,7 @@ public class GoodsFragment extends Fragment implements
             }
 
             public void bind(GoodEntity goodEntity) {
+                mGoodEntity = goodEntity;
                 mBinding.setGood(goodEntity);
                 mBinding.executePendingBindings();
             }
@@ -133,10 +151,10 @@ public class GoodsFragment extends Fragment implements
 
                 popup.setOnMenuItemClickListener(item -> {
                     if (item.getItemId() == R.id.action_edit) {
-
+                        UpdateGoodDialog dialog = new UpdateGoodDialog(mGoodEntity);
+                        dialog.show(GoodsFragment.this.getChildFragmentManager(), CREATE_GOOD_DIALOG_TAG);
                     } else {
-                        String goodName = mBinding.textGoodName.getText().toString();
-                        DeleteDialog dialog = new DeleteDialog(goodName, "Delete Good");
+                        DeleteDialog dialog = new DeleteDialog(mGoodEntity.getName(), "Delete Good");
                         dialog.show(GoodsFragment.this.getChildFragmentManager(), DELETE_GOOD_DIALOG_TAG);
                     }
 

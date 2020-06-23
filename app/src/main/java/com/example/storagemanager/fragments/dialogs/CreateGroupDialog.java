@@ -12,7 +12,7 @@ import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.DialogFragment;
 
 import com.example.storagemanager.R;
-import com.example.storagemanager.databinding.DialogCreateGroupBinding;
+import com.example.storagemanager.databinding.DialogGroupBinding;
 
 import java.util.Objects;
 
@@ -28,8 +28,8 @@ public class CreateGroupDialog extends DialogFragment {
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        DialogCreateGroupBinding binding = DataBindingUtil.inflate(LayoutInflater.from(requireContext()),
-                R.layout.dialog_create_group, null, false);
+        DialogGroupBinding binding = DataBindingUtil.inflate(LayoutInflater.from(requireContext()),
+                R.layout.dialog_group, null, false);
 
         return new AlertDialog
                 .Builder(requireActivity())

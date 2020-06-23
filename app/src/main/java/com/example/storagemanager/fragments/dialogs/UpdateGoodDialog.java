@@ -13,17 +13,23 @@ import androidx.fragment.app.DialogFragment;
 
 import com.example.storagemanager.R;
 import com.example.storagemanager.databinding.DialogGoodBinding;
+import com.example.storagemanager.entities.GoodEntity;
 
 import java.util.Objects;
 
-public class CreateGoodDialog extends DialogFragment {
+public class UpdateGoodDialog extends DialogFragment {
 
-    public interface CreateGoodDialogListener {
-        void createGoodData(String name, String group, String description,
+    public interface UpdateGoodDialogListener {
+        void updateGoodData(String name, String group, String description,
                             String producer, int amount, int price);
     }
 
-    private CreateGoodDialogListener mListener;
+    private UpdateGoodDialogListener mListener;
+    private final GoodEntity mGoodEntity;
+
+    public UpdateGoodDialog(GoodEntity goodEntity) {
+        mGoodEntity = goodEntity;
+    }
 
     @SuppressLint("InflateParams")
     @NonNull
@@ -31,6 +37,8 @@ public class CreateGoodDialog extends DialogFragment {
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         DialogGoodBinding binding = DataBindingUtil.inflate(LayoutInflater.from(requireContext()),
                 R.layout.dialog_good, null, false);
+
+        binding.setGood(mGoodEntity);
 
         return new AlertDialog
                 .Builder(requireActivity())
@@ -49,10 +57,10 @@ public class CreateGoodDialog extends DialogFragment {
                     } catch (NumberFormatException ignored) {
                     }
 
-                    mListener.createGoodData(name, group, description, producer, amount, price);
+                    mListener.updateGoodData(name, group, description, producer, amount, price);
                 })
                 .setNegativeButton(R.string.cancel, (dialog, id) ->
-                        Objects.requireNonNull(CreateGoodDialog.this.getDialog()).cancel())
+                        Objects.requireNonNull(UpdateGoodDialog.this.getDialog()).cancel())
                 .create();
     }
 
@@ -60,10 +68,11 @@ public class CreateGoodDialog extends DialogFragment {
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
         try {
-            mListener = (CreateGoodDialog.CreateGoodDialogListener) getParentFragment();
+            mListener = (UpdateGoodDialogListener) getParentFragment();
         } catch (ClassCastException e) {
             throw new ClassCastException(context.toString()
-                    + " must implement CreateGoodDialogListener");
+                    + " must implement UpdateGoodDialogListener");
         }
     }
 }
+
