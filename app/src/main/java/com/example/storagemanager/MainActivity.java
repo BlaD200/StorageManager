@@ -69,6 +69,7 @@ public class MainActivity extends AppCompatActivity {
         if (item.getItemId() == R.id.action_logout) {
             mLoginViewModel.logout();
             navigateToLogin();
+            return true;
         }
 
         return super.onOptionsItemSelected(item);

@@ -2,6 +2,7 @@ package com.example.storagemanager.fragments;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
@@ -38,6 +39,7 @@ public class GroupsFragment extends Fragment implements
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container,
                              Bundle savedInstanceState) {
+        setHasOptionsMenu(true);
         mBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_groups,
                 container, false);
         return mBinding.getRoot();
@@ -184,6 +186,12 @@ public class GroupsFragment extends Fragment implements
                 "Really tired description"));
 
         return groupEntities;
+    }
+
+    @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+        menu.findItem(R.id.action_logout).setVisible(true);
+        super.onPrepareOptionsMenu(menu);
     }
 
     public static final String CREATE_GROUP_DIALOG_TAG = "CREATE_GROUP_DIALOG";

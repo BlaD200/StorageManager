@@ -2,6 +2,8 @@ package com.example.storagemanager.fragments;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
@@ -23,6 +25,7 @@ import com.example.storagemanager.entities.GoodEntity;
 import com.example.storagemanager.fragments.dialogs.CreateGoodDialog;
 import com.example.storagemanager.fragments.dialogs.DeleteDialog;
 import com.example.storagemanager.fragments.dialogs.UpdateGoodDialog;
+import com.google.android.material.appbar.AppBarLayout;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -33,11 +36,13 @@ public class GoodsFragment extends Fragment implements
         DeleteDialog.DeleteDialogListener {
 
     private FragmentGoodsBinding mBinding;
+    private AppBarLayout mAppBarLayout;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container,
                              Bundle savedInstanceState) {
+        setHasOptionsMenu(true);
         mBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_goods,
                 container, false);
         return mBinding.getRoot();
@@ -46,6 +51,10 @@ public class GoodsFragment extends Fragment implements
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        mAppBarLayout = mBinding.appBarLayout;
+        mAppBarLayout.addOnOffsetChangedListener((appBarLayout, verticalOffset) ->
+                mIsExpanded = verticalOffset == 0);
 
         RecyclerView recyclerView = mBinding.goodsList;
 
@@ -56,6 +65,23 @@ public class GoodsFragment extends Fragment implements
             CreateGoodDialog dialog = new CreateGoodDialog();
             dialog.show(GoodsFragment.this.getChildFragmentManager(), CREATE_GOOD_DIALOG_TAG);
         });
+    }
+
+    @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+        menu.findItem(R.id.action_search).setVisible(true);
+        menu.findItem(R.id.action_logout).setVisible(true);
+        super.onPrepareOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (item.getItemId() == R.id.action_search) {
+            mAppBarLayout.setExpanded(!mIsExpanded);
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -203,6 +229,8 @@ public class GoodsFragment extends Fragment implements
 
         return goodEntities;
     }
+
+    private boolean mIsExpanded = true;
 
     private static final String CREATE_GOOD_DIALOG_TAG = "CREATE_GOOD_DIALOG";
     private static final String DELETE_GOOD_DIALOG_TAG = "DELETE_GOOD_DIALOG";
