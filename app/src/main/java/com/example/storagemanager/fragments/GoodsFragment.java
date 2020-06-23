@@ -8,6 +8,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.PopupMenu;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -18,11 +19,14 @@ import com.example.storagemanager.databinding.FragmentGoodsBinding;
 import com.example.storagemanager.databinding.ItemGoodBinding;
 import com.example.storagemanager.entities.GoodEntity;
 import com.example.storagemanager.fragments.dialogs.CreateGoodDialog;
+import com.example.storagemanager.fragments.dialogs.DeleteDialog;
 
 import java.util.LinkedList;
 import java.util.List;
 
-public class GoodsFragment extends Fragment implements CreateGoodDialog.CreateGoodDialogListener {
+public class GoodsFragment extends Fragment implements
+        CreateGoodDialog.CreateGoodDialogListener,
+        DeleteDialog.DeleteDialogListener {
 
     private FragmentGoodsBinding mBinding;
 
@@ -64,7 +68,12 @@ public class GoodsFragment extends Fragment implements CreateGoodDialog.CreateGo
         Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show();
     }
 
-    static class Adapter extends RecyclerView.Adapter<Adapter.GoodViewHolder> {
+    @Override
+    public void delete(String id) {
+        Toast.makeText(requireContext(), "Delete good: " + id, Toast.LENGTH_SHORT).show();
+    }
+
+    class Adapter extends RecyclerView.Adapter<Adapter.GoodViewHolder> {
 
         private List<GoodEntity> mData;
 
@@ -94,18 +103,49 @@ public class GoodsFragment extends Fragment implements CreateGoodDialog.CreateGo
             return mData.size();
         }
 
-        public static class GoodViewHolder extends RecyclerView.ViewHolder {
+        public class GoodViewHolder extends RecyclerView.ViewHolder
+                implements View.OnClickListener, View.OnLongClickListener {
 
             private final ItemGoodBinding mBinding;
 
             public GoodViewHolder(ItemGoodBinding binding) {
                 super(binding.getRoot());
                 mBinding = binding;
+                binding.getRoot().setOnClickListener(this);
+                binding.getRoot().setOnLongClickListener(this);
             }
 
             public void bind(GoodEntity goodEntity) {
                 mBinding.setGood(goodEntity);
                 mBinding.executePendingBindings();
+            }
+
+            @Override
+            public void onClick(View v) {
+                // TODO navigation
+            }
+
+            @Override
+            public boolean onLongClick(View v) {
+                PopupMenu popup = new PopupMenu(requireContext(), v);
+
+                popup.inflate(R.menu.menu_list_item_popup);
+
+                popup.setOnMenuItemClickListener(item -> {
+                    if (item.getItemId() == R.id.action_edit) {
+
+                    } else {
+                        String goodName = mBinding.textGoodName.getText().toString();
+                        DeleteDialog dialog = new DeleteDialog(goodName, "Delete Good");
+                        dialog.show(GoodsFragment.this.getChildFragmentManager(), DELETE_GOOD_DIALOG_TAG);
+                    }
+
+                    return true;
+                });
+
+                popup.show();
+
+                return true;
             }
         }
     }
@@ -142,4 +182,5 @@ public class GoodsFragment extends Fragment implements CreateGoodDialog.CreateGo
     }
 
     private static final String CREATE_GOOD_DIALOG_TAG = "CREATE_GOOD_DIALOG";
+    private static final String DELETE_GOOD_DIALOG_TAG = "DELETE_GOOD_DIALOG";
 }

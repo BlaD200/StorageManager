@@ -52,13 +52,10 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        //noinspection SwitchStatementWithTooFewBranches
-        switch (item.getItemId()) {
-            case R.id.action_logout:
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
+        if (item.getItemId() == R.id.action_logout) ;
+        // TODO logout
+
+        return super.onOptionsItemSelected(item);
     }
 
     private void setupDestinations() {
