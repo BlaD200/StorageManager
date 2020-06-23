@@ -11,6 +11,8 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.widget.PopupMenu;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavDirections;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -136,7 +138,10 @@ public class GroupsFragment extends Fragment implements
 
             @Override
             public void onClick(View v) {
-                // TODO navigation
+                // TODO pass id
+                NavDirections action = GroupsFragmentDirections
+                        .actionGroupsFragmentToGroupFragment("fake id");
+                Navigation.findNavController(v).navigate(action);
             }
 
             @Override

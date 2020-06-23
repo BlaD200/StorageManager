@@ -9,25 +9,52 @@
         android:id="@+id/goodsFragment"
         android:name="com.example.storagemanager.fragments.GoodsFragment"
         android:label="GoodsFragment"
-        tools:layout="@layout/fragment_goods" />
+        tools:layout="@layout/fragment_goods" >
+        <action
+            android:id="@+id/action_goodsFragment_to_goodFragment"
+            app:destination="@id/goodFragment" />
+        <argument
+            android:name="groupId"
+            app:argType="string"
+            app:nullable="true"
+            android:defaultValue="@null" />
+    </fragment>
 
     <fragment
         android:id="@+id/groupsFragment"
         android:name="com.example.storagemanager.fragments.GroupsFragment"
         android:label="GroupsFragment"
-        tools:layout="@layout/fragment_groups" />
+        tools:layout="@layout/fragment_groups" >
+        <action
+            android:id="@+id/action_groupsFragment_to_groupFragment"
+            app:destination="@id/groupFragment" />
+    </fragment>
 
     <fragment
         android:id="@+id/goodFragment"
         android:name="com.example.storagemanager.fragments.GoodFragment"
         android:label="GoodFragment"
-        tools:layout="@layout/fragment_good" />
+        tools:layout="@layout/fragment_good" >
+        <argument
+            android:name="goodId"
+            app:argType="string" />
+        <action
+            android:id="@+id/action_goodFragment_to_groupFragment"
+            app:destination="@id/groupFragment" />
+    </fragment>
 
     <fragment
         android:id="@+id/groupFragment"
         android:name="com.example.storagemanager.fragments.GroupFragment"
         android:label="GroupFragment"
-        tools:layout="@layout/fragment_group" />
+        tools:layout="@layout/fragment_group" >
+        <argument
+            android:name="groupId"
+            app:argType="string" />
+        <action
+            android:id="@+id/action_groupFragment_to_goodsFragment"
+            app:destination="@id/goodsFragment" />
+    </fragment>
 
     <fragment
         android:id="@+id/loginFragment"
