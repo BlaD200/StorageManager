@@ -13,16 +13,22 @@ import androidx.fragment.app.DialogFragment;
 
 import com.example.storagemanager.R;
 import com.example.storagemanager.databinding.DialogCreateGroupBinding;
+import com.example.storagemanager.entities.GroupEntity;
 
 import java.util.Objects;
 
-public class CreateGroupDialog extends DialogFragment {
+public class UpdateGroupDialog extends DialogFragment {
 
-    public interface CreateGroupDialogListener {
-        void createGroupData(String name, String description);
+    public interface UpdateGroupDialogListener {
+        void updateGroupData(String name, String description);
     }
 
-    private CreateGroupDialogListener mListener;
+    private UpdateGroupDialogListener mListener;
+    private final GroupEntity mGroupEntity;
+
+    public UpdateGroupDialog(@NonNull GroupEntity groupEntity) {
+        mGroupEntity = groupEntity;
+    }
 
     @SuppressLint("InflateParams")
     @NonNull
@@ -31,17 +37,19 @@ public class CreateGroupDialog extends DialogFragment {
         DialogCreateGroupBinding binding = DataBindingUtil.inflate(LayoutInflater.from(requireContext()),
                 R.layout.dialog_create_group, null, false);
 
+        binding.setGroup(mGroupEntity);
+
         return new AlertDialog
                 .Builder(requireActivity())
                 .setView(binding.getRoot())
-                .setPositiveButton(R.string.create, (dialog, id) -> {
+                .setPositiveButton(R.string.update, (dialog, id) -> {
                     String name = binding.editName.getText().toString();
                     String description = binding.editDescription.getText().toString();
 
-                    mListener.createGroupData(name, description);
+                    mListener.updateGroupData(name, description);
                 })
                 .setNegativeButton(R.string.cancel, (dialog, id) ->
-                        Objects.requireNonNull(CreateGroupDialog.this.getDialog()).cancel())
+                        Objects.requireNonNull(UpdateGroupDialog.this.getDialog()).cancel())
                 .create();
     }
 
@@ -49,11 +57,12 @@ public class CreateGroupDialog extends DialogFragment {
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
         try {
-            mListener = (CreateGroupDialogListener) getParentFragment();
+            mListener = (UpdateGroupDialogListener) getParentFragment();
         } catch (ClassCastException e) {
             throw new ClassCastException(context.toString()
-                    + " must implement CreateGroupDialogListener");
+                    + " must implement UpdateGroupDialogListener");
         }
     }
 }
+
 

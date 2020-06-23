@@ -28,6 +28,7 @@
     <string name="name">Name</string>
     <string name="description">Description</string>
     <string name="create">Create</string>
+    <string name="update">Update</string>
     <string name="cancel">Cancel</string>
     <string name="goods_icon">Goods Icon</string>
     <string name="group">Group</string>

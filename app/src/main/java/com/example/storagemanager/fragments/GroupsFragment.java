@@ -20,12 +20,14 @@ import com.example.storagemanager.databinding.ItemGroupBinding;
 import com.example.storagemanager.entities.GroupEntity;
 import com.example.storagemanager.fragments.dialogs.CreateGroupDialog;
 import com.example.storagemanager.fragments.dialogs.DeleteDialog;
+import com.example.storagemanager.fragments.dialogs.UpdateGroupDialog;
 
 import java.util.LinkedList;
 import java.util.List;
 
 public class GroupsFragment extends Fragment implements
         CreateGroupDialog.CreateGroupDialogListener,
+        UpdateGroupDialog.UpdateGroupDialogListener,
         DeleteDialog.DeleteDialogListener {
 
     private FragmentGroupsBinding mBinding;
@@ -55,7 +57,7 @@ public class GroupsFragment extends Fragment implements
     }
 
     @Override
-    public void getGroupData(String name, String description) {
+    public void createGroupData(String name, String description) {
         String message;
 
         if (name.isEmpty() || description.isEmpty())
@@ -63,7 +65,19 @@ public class GroupsFragment extends Fragment implements
         else
             message = new GroupEntity(name, description).toString();
 
-        Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show();
+        Toast.makeText(requireContext(), "Create: " + message, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void updateGroupData(String name, String description) {
+        String message;
+
+        if (name.isEmpty() || description.isEmpty())
+            message = "Name or description cannot be empty";
+        else
+            message = new GroupEntity(name, description).toString();
+
+        Toast.makeText(requireContext(), "Update: " + message, Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -105,6 +119,7 @@ public class GroupsFragment extends Fragment implements
                 View.OnClickListener, View.OnLongClickListener {
 
             private final ItemGroupBinding mBinding;
+            private GroupEntity mGroupEntity;
 
             public GroupViewHolder(ItemGroupBinding binding) {
                 super(binding.getRoot());
@@ -114,6 +129,7 @@ public class GroupsFragment extends Fragment implements
             }
 
             public void bind(GroupEntity groupEntity) {
+                mGroupEntity = groupEntity;
                 mBinding.setGroup(groupEntity);
                 mBinding.executePendingBindings();
             }
@@ -131,10 +147,10 @@ public class GroupsFragment extends Fragment implements
 
                 popup.setOnMenuItemClickListener(item -> {
                     if (item.getItemId() == R.id.action_edit) {
-
+                        UpdateGroupDialog dialog = new UpdateGroupDialog(mGroupEntity);
+                        dialog.show(GroupsFragment.this.getChildFragmentManager(), CREATE_GROUP_DIALOG_TAG);
                     } else {
-                        String groupName = mBinding.textName.getText().toString();
-                        DeleteDialog dialog = new DeleteDialog(groupName, "Delete Group");
+                        DeleteDialog dialog = new DeleteDialog(mGroupEntity.getName(), "Delete Group");
                         dialog.show(GroupsFragment.this.getChildFragmentManager(), DELETE_GROUP_DIALOG_TAG);
                     }
 
