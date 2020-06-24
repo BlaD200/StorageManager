@@ -108,11 +108,11 @@ public class GoodsFragment extends Fragment implements
                 new ArrayAdapter<>(requireContext(), R.layout.item_spinner, producers));
 
         if (getArguments() != null && GoodsFragmentArgs
-                .fromBundle(getArguments()).getGroupId() != null) {
-            String groupId = GoodsFragmentArgs.fromBundle(getArguments()).getGroupId();
+                .fromBundle(getArguments()).getGroupName() != null) {
+            String groupName = GoodsFragmentArgs.fromBundle(getArguments()).getGroupName();
 
             for (int i = 0; i < groups.size(); i++)
-                if (groups.get(i).equals(groupId))
+                if (groups.get(i).equals(groupName))
                     mBinding.searchArea.spinnerGroup.setSelection(i);
         }
 
@@ -253,9 +253,8 @@ public class GoodsFragment extends Fragment implements
 
             @Override
             public void onClick(View v) {
-                // TODO pass id
                 NavDirections action = GoodsFragmentDirections
-                        .actionGoodsFragmentToGoodFragment("fake id");
+                        .actionGoodsFragmentToGoodFragment(mGoodEntity.getName());
                 Navigation.findNavController(v).navigate(action);
             }
 

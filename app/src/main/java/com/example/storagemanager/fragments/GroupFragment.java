@@ -9,10 +9,13 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 
 import com.example.storagemanager.R;
 import com.example.storagemanager.databinding.FragmentGroupBinding;
+import com.example.storagemanager.entities.GroupEntity;
+import com.example.storagemanager.viewmodels.GroupViewModel;
 
 public class GroupFragment extends Fragment {
 
@@ -31,16 +34,21 @@ public class GroupFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        String groupId = GroupFragmentArgs.fromBundle(requireArguments()).getGroupId();
-        // TODO setup data
-        //  mBinding.setGroup();
-        //  mBinding.setTotalPrice();
+        GroupViewModel viewModel = new ViewModelProvider(this)
+                .get(GroupViewModel.class);
+
+        String groupName = GroupFragmentArgs.fromBundle(requireArguments()).getGroupName();
+
+        GroupEntity groupEntity = viewModel.getGroupByName(groupName);
+        mBinding.setGroup(groupEntity);
+
+        int groupTotalPrice = viewModel.getGroupTotalPrice(groupEntity);
+        mBinding.setTotalPrice(groupTotalPrice);
 
         mBinding.cardGoods.setOnClickListener(v -> {
-            // TODO pass id
             GroupFragmentDirections.ActionGroupFragmentToGoodsFragment action =
                     GroupFragmentDirections.actionGroupFragmentToGoodsFragment();
-            action.setGroupId("fake id");
+            action.setGroupName(groupName);
             Navigation.findNavController(v).navigate(action);
         });
     }
