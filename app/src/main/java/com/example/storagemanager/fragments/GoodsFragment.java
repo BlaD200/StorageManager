@@ -6,6 +6,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -13,31 +16,39 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.widget.PopupMenu;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavDirections;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.storagemanager.R;
+import com.example.storagemanager.Utils;
 import com.example.storagemanager.databinding.FragmentGoodsBinding;
 import com.example.storagemanager.databinding.ItemGoodBinding;
 import com.example.storagemanager.entities.GoodEntity;
+import com.example.storagemanager.entities.GroupEntity;
+import com.example.storagemanager.exceptions.EntityException;
 import com.example.storagemanager.fragments.dialogs.ChangeAmountDialog;
 import com.example.storagemanager.fragments.dialogs.DeleteDialog;
 import com.example.storagemanager.fragments.dialogs.GoodDialog;
+import com.example.storagemanager.viewmodels.GoodsViewModel;
 import com.google.android.material.appbar.AppBarLayout;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class GoodsFragment extends Fragment implements
         GoodDialog.CreateGoodListener,
         GoodDialog.UpdateGoodListener,
         ChangeAmountDialog.ChangeAmountListener,
-        DeleteDialog.DeleteListener {
+        DeleteDialog.DeleteListener<GoodEntity> {
 
     private FragmentGoodsBinding mBinding;
+    private GoodsViewModel mViewModel;
     private AppBarLayout mAppBarLayout;
+    private Adapter mAdapter;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -53,24 +64,71 @@ public class GoodsFragment extends Fragment implements
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        if (getArguments() != null && GoodsFragmentArgs
-                .fromBundle(getArguments()).getGroupId() != null) {
-            String groupId = GoodsFragmentArgs.fromBundle(getArguments()).getGroupId();
-            // TODO get group name
-        }
+        mViewModel = new ViewModelProvider(this)
+                .get(GoodsViewModel.class);
 
         mAppBarLayout = mBinding.appBarLayout;
         mAppBarLayout.addOnOffsetChangedListener((appBarLayout, verticalOffset) ->
                 mIsExpanded = verticalOffset == 0);
 
         RecyclerView recyclerView = mBinding.goodsList;
+        mAdapter = new Adapter(new LinkedList<>());
 
         recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
-        recyclerView.setAdapter(new GoodsFragment.Adapter(testData()));
+        recyclerView.setAdapter(mAdapter);
 
         mBinding.fab.setOnClickListener(v -> {
             GoodDialog dialog = new GoodDialog((GoodDialog.CreateGoodListener) this, null);
             dialog.show(GoodsFragment.this.getChildFragmentManager(), GOOD_DIALOG_TAG);
+        });
+
+        setupFilter();
+
+        mBinding.searchArea.btnSearch.callOnClick();
+    }
+
+    private void setupFilter() {
+        EditText editQuery = mBinding.searchArea.editQuery;
+        Spinner spinnerGroup = mBinding.searchArea.spinnerGroup;
+        Spinner spinnerProducer = mBinding.searchArea.spinnerProducer;
+        EditText editAmountMin = mBinding.searchArea.editAmountMin;
+        EditText editAmountMax = mBinding.searchArea.editAmountMax;
+        EditText editPriceMin = mBinding.searchArea.editPriceMin;
+        EditText editPriceMax = mBinding.searchArea.editPriceMax;
+
+        List<String> groups = mViewModel.getGroups()
+                .stream()
+                .map(GroupEntity::getName)
+                .collect(Collectors.toList());
+        List<String> producers = mViewModel.getProducers();
+
+        spinnerGroup.setAdapter(
+                new ArrayAdapter<>(requireContext(), R.layout.item_spinner, groups));
+        spinnerProducer.setAdapter(
+                new ArrayAdapter<>(requireContext(), R.layout.item_spinner, producers));
+
+        if (getArguments() != null && GoodsFragmentArgs
+                .fromBundle(getArguments()).getGroupId() != null) {
+            String groupId = GoodsFragmentArgs.fromBundle(getArguments()).getGroupId();
+
+            for (int i = 0; i < groups.size(); i++)
+                if (groups.get(i).equals(groupId))
+                    mBinding.searchArea.spinnerGroup.setSelection(i);
+        }
+
+        mBinding.searchArea.btnSearch.setOnClickListener(v -> {
+            String query = editQuery.getText().toString();
+            String group = spinnerGroup.getSelectedItem().toString();
+            String producer = spinnerProducer.getSelectedItem().toString();
+            Integer amountMin = Utils.getIntOrNull(editAmountMin);
+            Integer amountMax = Utils.getIntOrNull(editAmountMax);
+            Integer priceMin = Utils.getIntOrNull(editPriceMin);
+            Integer priceMax = Utils.getIntOrNull(editPriceMax);
+
+            List<GoodEntity> goodEntities = mViewModel.getGoods(query, group, producer,
+                    amountMin, amountMax, priceMin, priceMax);
+
+            mAdapter.setData(goodEntities);
         });
     }
 
@@ -92,48 +150,40 @@ public class GoodsFragment extends Fragment implements
     }
 
     @Override
-    public void createGoodData(String name, String group, String description, String producer, int amount, int price) {
-        String message;
-
-        if (name.isEmpty() || group.isEmpty() || description.isEmpty())
-            message = "Name, group, description or producer cannot be empty";
-        else if (amount == -1 || price == -1)
-            message = "Amount or price cannot be empty";
-        else
-            message = new GoodEntity(name, group, description, producer, amount, price).toString();
-
-        Toast.makeText(requireContext(), "Create: " + message, Toast.LENGTH_SHORT).show();
+    public void createGoodData(String name, String group, String description,
+                               String producer, Integer amount, Integer price) {
+        try {
+            GoodEntity goodEntity = new GoodEntity(name, group, description, producer, amount, price);
+            mViewModel.createGood(goodEntity);
+        } catch (EntityException e) {
+            Toast.makeText(requireContext(), e.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override
-    public void updateGoodData(String name, String group, String description, String producer, int amount, int price) {
-        String message;
-
-        if (name.isEmpty() || group.isEmpty() || description.isEmpty())
-            message = "Name, group, description or producer cannot be empty";
-        else if (amount == -1 || price == -1)
-            message = "Amount or price cannot be empty";
-        else
-            message = new GoodEntity(name, group, description, producer, amount, price).toString();
-
-        Toast.makeText(requireContext(), "Update: " + message, Toast.LENGTH_SHORT).show();
+    public void updateGoodData(String name, String group, String description,
+                               String producer, Integer amount, Integer price) {
+        try {
+            GoodEntity goodEntity = new GoodEntity(name, group, description, producer, amount, price);
+            mViewModel.updateGood(goodEntity);
+        } catch (EntityException e) {
+            Toast.makeText(requireContext(), e.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override
-    public void delete(String id) {
-        Toast.makeText(requireContext(), "Delete good: " + id, Toast.LENGTH_SHORT).show();
+    public void delete(GoodEntity goodEntity) {
+        mViewModel.deleteGood(goodEntity);
     }
 
     @Override
-    public void addAmount(int amount) {
-        Toast.makeText(requireContext(), "Add amount: " + amount, Toast.LENGTH_SHORT).show();
-        // TODO add amount
+    public void addAmount(GoodEntity goodEntity, int amount) {
+        mViewModel.changeAmount(goodEntity, amount);
     }
 
     @Override
-    public void removeAmount(int amount) {
-        Toast.makeText(requireContext(), "Remove amount: " + amount, Toast.LENGTH_SHORT).show();
-        // TODO add amount
+    public void removeAmount(GoodEntity goodEntity, int amount) {
+        mViewModel.changeAmount(goodEntity, -amount);
     }
 
     class Adapter extends RecyclerView.Adapter<Adapter.GoodViewHolder> {
@@ -161,6 +211,11 @@ public class GoodsFragment extends Fragment implements
             holder.bind(goodEntity);
         }
 
+        public void setData(List<GoodEntity> data) {
+            mData = data;
+            notifyDataSetChanged();
+        }
+
         @Override
         public int getItemCount() {
             return mData.size();
@@ -180,12 +235,12 @@ public class GoodsFragment extends Fragment implements
                 binding.getRoot().setOnLongClickListener(this);
 
                 binding.btnPlus.setOnClickListener(v -> {
-                    ChangeAmountDialog dialog = new ChangeAmountDialog(mGoodEntity.getAmount(), true);
+                    ChangeAmountDialog dialog = new ChangeAmountDialog(mGoodEntity, true);
                     dialog.show(GoodsFragment.this.getChildFragmentManager(), CHANGE_AMOUNT_DIALOG_TAG);
                 });
 
                 binding.btnMinus.setOnClickListener(v -> {
-                    ChangeAmountDialog dialog = new ChangeAmountDialog(mGoodEntity.getAmount(), false);
+                    ChangeAmountDialog dialog = new ChangeAmountDialog(mGoodEntity, false);
                     dialog.show(GoodsFragment.this.getChildFragmentManager(), CHANGE_AMOUNT_DIALOG_TAG);
                 });
             }
@@ -215,7 +270,7 @@ public class GoodsFragment extends Fragment implements
                         GoodDialog dialog = new GoodDialog((GoodDialog.UpdateGoodListener) GoodsFragment.this, mGoodEntity);
                         dialog.show(GoodsFragment.this.getChildFragmentManager(), GOOD_DIALOG_TAG);
                     } else {
-                        DeleteDialog dialog = new DeleteDialog(mGoodEntity.getName(), "Delete Good");
+                        DeleteDialog<GoodEntity> dialog = new DeleteDialog<>(mGoodEntity, "Delete Good");
                         dialog.show(GoodsFragment.this.getChildFragmentManager(), DELETE_GOOD_DIALOG_TAG);
                     }
 
@@ -227,37 +282,6 @@ public class GoodsFragment extends Fragment implements
                 return true;
             }
         }
-    }
-
-    private List<GoodEntity> testData() {
-        List<GoodEntity> goodEntities = new LinkedList<>();
-
-        goodEntities.add(new GoodEntity("Goody good 0", "Good",
-                "Good Description", "Good Company", 1000, 1000));
-        goodEntities.add(new GoodEntity("Goody good 1", "Good",
-                "Good Description", "Good Company", 1000, 1000));
-        goodEntities.add(new GoodEntity("Goody good 2", "Good",
-                "Good Description", "Good Company", 1000, 1000));
-        goodEntities.add(new GoodEntity("Goody good 3", "Good",
-                "Good Description", "Good Company", 1000, 1000));
-        goodEntities.add(new GoodEntity("Goody good 4", "Good",
-                "Good Description", "Good Company", 1000, 1000));
-        goodEntities.add(new GoodEntity("Goody good 5", "Good",
-                "Good Description", "Good Company", 1000, 1000));
-        goodEntities.add(new GoodEntity("Bady good 0", "Bad",
-                "Bad Description", "Bad Company", 10, 100));
-        goodEntities.add(new GoodEntity("Bady good 1", "Bad",
-                "Bad Description", "Bad Company", 10, 100));
-        goodEntities.add(new GoodEntity("Bady good 2", "Bad",
-                "Bad Description", "Bad Company", 10, 100));
-        goodEntities.add(new GoodEntity("Bady good 3", "Bad",
-                "Bad Description", "Bad Company", 10, 100));
-        goodEntities.add(new GoodEntity("Bady good 4", "Bad",
-                "Bad Description", "Bad Company", 10, 100));
-        goodEntities.add(new GoodEntity("Bady good 5", "Bad",
-                "Bad Description", "Bad Company", 10, 100));
-
-        return goodEntities;
     }
 
     private boolean mIsExpanded = true;

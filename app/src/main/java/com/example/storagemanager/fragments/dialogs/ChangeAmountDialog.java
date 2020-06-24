@@ -14,23 +14,24 @@ import androidx.fragment.app.DialogFragment;
 
 import com.example.storagemanager.R;
 import com.example.storagemanager.databinding.DialogChangeAmountBinding;
+import com.example.storagemanager.entities.GoodEntity;
 
 import java.util.Objects;
 
 public class ChangeAmountDialog extends DialogFragment {
 
     public interface ChangeAmountListener {
-        void addAmount(int amount);
+        void addAmount(GoodEntity goodEntity, int amount);
 
-        void removeAmount(int amount);
+        void removeAmount(GoodEntity goodEntity, int amount);
     }
 
     private ChangeAmountListener mListener;
-    private final int mAmount;
+    private final GoodEntity mGoodEntity;
     private final boolean mToAdd;
 
-    public ChangeAmountDialog(int amount, boolean toAdd) {
-        mAmount = amount;
+    public ChangeAmountDialog(GoodEntity goodEntity, boolean toAdd) {
+        mGoodEntity = goodEntity;
         mToAdd = toAdd;
     }
 
@@ -41,7 +42,7 @@ public class ChangeAmountDialog extends DialogFragment {
         DialogChangeAmountBinding binding = DataBindingUtil.inflate(LayoutInflater.from(requireContext()),
                 R.layout.dialog_change_amount, null, false);
 
-        binding.setAmount(mAmount);
+        binding.setAmount(mGoodEntity.getAmount());
         binding.setToAdd(mToAdd);
 
         return new AlertDialog
@@ -52,9 +53,9 @@ public class ChangeAmountDialog extends DialogFragment {
                         int amount = Integer.parseInt(binding.editChangeValue.getText().toString());
 
                         if (mToAdd)
-                            mListener.addAmount(amount);
+                            mListener.addAmount(mGoodEntity, amount);
                         else
-                            mListener.removeAmount(amount);
+                            mListener.removeAmount(mGoodEntity, amount);
                     } catch (NumberFormatException ignored) {
                         Toast.makeText(requireContext(), "Amount cannot be empty",
                                 Toast.LENGTH_SHORT).show();

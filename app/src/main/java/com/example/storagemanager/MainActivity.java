@@ -16,10 +16,13 @@ import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
+import com.example.storagemanager.backend.client.StoreClientTCP;
 import com.example.storagemanager.databinding.ActivityMainBinding;
 import com.example.storagemanager.viewmodels.LoginViewModel;
 import com.example.storagemanager.viewmodels.factories.LoginVMFactory;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+
+import java.io.IOException;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -34,8 +37,6 @@ public class MainActivity extends AppCompatActivity {
 
         ActivityMainBinding binding = DataBindingUtil
                 .setContentView(this, R.layout.activity_main);
-
-        // TODO + -
 
         SharedPreferences preferences = getSharedPreferences(USER_DATA_KEY, MODE_PRIVATE);
         mLoginViewModel = new ViewModelProvider(this,
@@ -58,6 +59,34 @@ public class MainActivity extends AppCompatActivity {
 
         if (!mLoginViewModel.isAuthenticated())
             navigateToLogin();
+
+        new Thread(this::setupConnection).start();
+    }
+
+    private void setupConnection() {
+        StoreClientTCP storeClientTCP = new StoreClientTCP();
+        int connectionAttempts = 10;
+        while (connectionAttempts >= 0) {
+            try {
+                if (storeClientTCP.connect())
+                    try {
+                        connectionAttempts = 10;
+                        storeClientTCP.conversation();
+                    } catch (IOException e) {
+                        System.err.println("CONNECTION LOST. TRYING RECONNECT.");
+                    }
+            } catch (IOException e) {
+                System.err.println("COULD NOT ESTABLISH CONNECTION(" + (10 - connectionAttempts) + ").");
+            } finally {
+                storeClientTCP.disconnect();
+            }
+            try {
+                Thread.sleep(200);
+            } catch (InterruptedException ignored) {
+            }
+            --connectionAttempts;
+        }
+        System.err.println("Closing org.vsynytsyn.client.");
     }
 
     @Override

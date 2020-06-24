@@ -1,5 +1,7 @@
 package com.example.storagemanager.backend.entity;
 
+import androidx.annotation.NonNull;
+
 import lombok.Data;
 
 @Data
@@ -11,6 +13,7 @@ public class Packet {
     private final Message message;
 
 
+    @NonNull
     @Override
     public String toString() {
         return "Packet{" +

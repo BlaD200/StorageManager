@@ -1,16 +1,12 @@
 package com.example.storagemanager.backend.entity;
 
-import android.os.Build;
-
-import androidx.annotation.RequiresApi;
+import java.util.Objects;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-
-import java.util.Objects;
-import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
 
 @Getter
 @Setter
@@ -22,14 +18,12 @@ public class Group {
     private Set<Good> goods;
 
 
-    @RequiresApi(api = Build.VERSION_CODES.N)
     public Group(String name) {
         this.name = name;
         goods = ConcurrentHashMap.newKeySet();
     }
 
 
-    @RequiresApi(api = Build.VERSION_CODES.N)
     public Group(String name, String description) {
         this.name = name;
         this.description = description;

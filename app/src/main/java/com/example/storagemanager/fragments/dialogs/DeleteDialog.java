@@ -12,18 +12,18 @@ import com.example.storagemanager.R;
 
 import java.util.Objects;
 
-public class DeleteDialog extends DialogFragment {
+public class DeleteDialog<E> extends DialogFragment {
 
-    public interface DeleteListener {
-        void delete(String id);
+    public interface DeleteListener<E> {
+        void delete(E entity);
     }
 
+    private DeleteListener<E> mListener;
+    private final E mEntity;
     private final String mMessage;
-    private final String mId;
-    private DeleteListener mListener;
 
-    public DeleteDialog(String id, String message) {
-        mId = id;
+    public DeleteDialog(E goodEntity, String message) {
+        mEntity = goodEntity;
         mMessage = message;
     }
 
@@ -33,12 +33,10 @@ public class DeleteDialog extends DialogFragment {
         return new AlertDialog
                 .Builder(requireActivity())
                 .setMessage(mMessage)
-                .setPositiveButton(R.string.delete, (dialog, which) -> {
-                    mListener.delete(mId);
-                })
-                .setNegativeButton(R.string.cancel, (dialog, which) -> {
-                    Objects.requireNonNull(DeleteDialog.this.getDialog()).cancel();
-                })
+                .setPositiveButton(R.string.delete, (dialog, which) ->
+                        mListener.delete(mEntity))
+                .setNegativeButton(R.string.cancel, (dialog, which) ->
+                        Objects.requireNonNull(DeleteDialog.this.getDialog()).cancel())
                 .create();
     }
 
@@ -46,7 +44,8 @@ public class DeleteDialog extends DialogFragment {
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
         try {
-            mListener = (DeleteListener) getParentFragment();
+            //noinspection unchecked
+            mListener = (DeleteListener<E>) getParentFragment();
         } catch (ClassCastException e) {
             throw new ClassCastException(context.toString()
                     + " must implement DeleteDialogListener");

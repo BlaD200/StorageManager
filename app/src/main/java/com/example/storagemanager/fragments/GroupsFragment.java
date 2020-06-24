@@ -30,7 +30,7 @@ import java.util.List;
 public class GroupsFragment extends Fragment implements
         GroupDialog.CreateGroupListener,
         GroupDialog.UpdateGroupListener,
-        DeleteDialog.DeleteListener {
+        DeleteDialog.DeleteListener<GroupEntity> {
 
     private FragmentGroupsBinding mBinding;
 
@@ -84,7 +84,7 @@ public class GroupsFragment extends Fragment implements
     }
 
     @Override
-    public void delete(String id) {
+    public void delete(GroupEntity id) {
         Toast.makeText(requireContext(), "Delete Group: " + id, Toast.LENGTH_SHORT).show();
     }
 
@@ -156,7 +156,7 @@ public class GroupsFragment extends Fragment implements
                         GroupDialog dialog = new GroupDialog((GroupDialog.UpdateGroupListener) GroupsFragment.this, mGroupEntity);
                         dialog.show(GroupsFragment.this.getChildFragmentManager(), GROUP_DIALOG_TAG);
                     } else {
-                        DeleteDialog dialog = new DeleteDialog(mGroupEntity.getName(), "Delete Group");
+                        DeleteDialog<GroupEntity> dialog = new DeleteDialog<>(mGroupEntity, "Delete Group");
                         dialog.show(GroupsFragment.this.getChildFragmentManager(), DELETE_GROUP_DIALOG_TAG);
                     }
 

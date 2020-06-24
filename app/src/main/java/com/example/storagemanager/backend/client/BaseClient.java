@@ -1,15 +1,8 @@
 package com.example.storagemanager.backend.client;
 
-import android.os.Build;
-
-import androidx.annotation.RequiresApi;
-
 import com.example.storagemanager.backend.cryptography.AsymmetricCryptography;
 import com.example.storagemanager.backend.cryptography.SymmetricCryptography;
 
-import javax.crypto.BadPaddingException;
-import javax.crypto.IllegalBlockSizeException;
-import javax.crypto.NoSuchPaddingException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -19,6 +12,11 @@ import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 import java.time.Duration;
 import java.time.LocalTime;
+import java.util.Arrays;
+
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
 
 public abstract class BaseClient implements IClient {
 
@@ -49,7 +47,6 @@ public abstract class BaseClient implements IClient {
             ANSI_BRIGHT_BLUE, ANSI_BRIGHT_PURPLE, ANSI_BRIGHT_CYAN, ANSI_BRIGHT_WHITE
     };
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
     protected static SymmetricCryptography configureSecureConnection(Socket socket) throws IOException {
 //        socket.setSoTimeout(INetwork.timeout);
         OutputStream out = socket.getOutputStream();
