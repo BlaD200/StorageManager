@@ -42,4 +42,5 @@
     <string name="add">Add</string>
     <string name="remove">Remove</string>
     <string name="number">Number</string>
+    <string name="search_view_hint">Group\'s name...</string>
 </resources>

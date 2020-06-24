@@ -3,6 +3,7 @@ package com.example.storagemanager.fragments;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
@@ -10,6 +11,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.PopupMenu;
+import androidx.appcompat.widget.SearchView;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
@@ -19,7 +21,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.storagemanager.R;
-import com.example.storagemanager.backend.entity.Group;
 import com.example.storagemanager.databinding.FragmentGroupsBinding;
 import com.example.storagemanager.databinding.ItemGroupBinding;
 import com.example.storagemanager.entities.GroupEntity;
@@ -28,7 +29,6 @@ import com.example.storagemanager.fragments.dialogs.DeleteDialog;
 import com.example.storagemanager.fragments.dialogs.GroupDialog;
 import com.example.storagemanager.viewmodels.GroupsViewModel;
 
-import java.util.LinkedList;
 import java.util.List;
 
 public class GroupsFragment extends Fragment implements
@@ -38,6 +38,7 @@ public class GroupsFragment extends Fragment implements
 
     private FragmentGroupsBinding mBinding;
     private GroupsViewModel mViewModel;
+    private Adapter mAdapter;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -56,13 +57,13 @@ public class GroupsFragment extends Fragment implements
         mViewModel = new ViewModelProvider(this)
                 .get(GroupsViewModel.class);
 
-        List<GroupEntity> groupEntities = mViewModel.getGroups();
+        List<GroupEntity> groupEntities = mViewModel.getGroups(null);
 
         RecyclerView recyclerView = mBinding.groupsList;
-        Adapter adapter = new Adapter(groupEntities);
+        mAdapter = new Adapter(groupEntities);
 
         recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
-        recyclerView.setAdapter(adapter);
+        recyclerView.setAdapter(mAdapter);
 
         mBinding.fab.setOnClickListener(v -> {
             GroupDialog dialog = new GroupDialog((GroupDialog.CreateGroupListener) this, null);
@@ -118,6 +119,11 @@ public class GroupsFragment extends Fragment implements
         public void onBindViewHolder(GroupViewHolder holder, int position) {
             GroupEntity groupEntity = mData.get(position);
             holder.bind(groupEntity);
+        }
+
+        public void setData(List<GroupEntity> data) {
+            mData = data;
+            notifyDataSetChanged();
         }
 
         @Override
@@ -179,6 +185,26 @@ public class GroupsFragment extends Fragment implements
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
         menu.findItem(R.id.action_logout).setVisible(true);
+
+        MenuItem actionSearchView = menu.findItem(R.id.action_search_view);
+        actionSearchView.setVisible(true);
+
+        SearchView searchView = (SearchView) actionSearchView.getActionView();
+        searchView.setQueryHint(getResources().getString(R.string.search_view_hint));
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                List<GroupEntity> groups = mViewModel.getGroups(query);
+                mAdapter.setData(groups);
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                return false;
+            }
+        });
+
         super.onPrepareOptionsMenu(menu);
     }
 

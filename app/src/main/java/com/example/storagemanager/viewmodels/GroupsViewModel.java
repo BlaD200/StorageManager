@@ -12,7 +12,7 @@ import lombok.SneakyThrows;
 public class GroupsViewModel extends ViewModel {
 
     @SneakyThrows
-    public List<GroupEntity> getGroups() {
+    public List<GroupEntity> getGroups(String query) {
         // TODO get groups
         List<GroupEntity> groupEntities = new LinkedList<>();
 
