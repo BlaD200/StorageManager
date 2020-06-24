@@ -47,6 +47,7 @@ public class GoodsViewModel extends ViewModel {
         return goodEntities;
     }
 
+    @SneakyThrows
     public List<GroupEntity> getGroups() {
         // TODO get groups
         List<GroupEntity> groupEntities = new LinkedList<>();

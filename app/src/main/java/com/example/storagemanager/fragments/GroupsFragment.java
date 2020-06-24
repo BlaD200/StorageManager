@@ -12,17 +12,21 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.widget.PopupMenu;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavDirections;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.storagemanager.R;
+import com.example.storagemanager.backend.entity.Group;
 import com.example.storagemanager.databinding.FragmentGroupsBinding;
 import com.example.storagemanager.databinding.ItemGroupBinding;
 import com.example.storagemanager.entities.GroupEntity;
+import com.example.storagemanager.exceptions.EntityException;
 import com.example.storagemanager.fragments.dialogs.DeleteDialog;
 import com.example.storagemanager.fragments.dialogs.GroupDialog;
+import com.example.storagemanager.viewmodels.GroupsViewModel;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -33,6 +37,7 @@ public class GroupsFragment extends Fragment implements
         DeleteDialog.DeleteListener<GroupEntity> {
 
     private FragmentGroupsBinding mBinding;
+    private GroupsViewModel mViewModel;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -48,10 +53,16 @@ public class GroupsFragment extends Fragment implements
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        mViewModel = new ViewModelProvider(this)
+                .get(GroupsViewModel.class);
+
+        List<GroupEntity> groupEntities = mViewModel.getGroups();
+
         RecyclerView recyclerView = mBinding.groupsList;
+        Adapter adapter = new Adapter(groupEntities);
 
         recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
-        recyclerView.setAdapter(new Adapter(testData()));
+        recyclerView.setAdapter(adapter);
 
         mBinding.fab.setOnClickListener(v -> {
             GroupDialog dialog = new GroupDialog((GroupDialog.CreateGroupListener) this, null);
@@ -61,31 +72,27 @@ public class GroupsFragment extends Fragment implements
 
     @Override
     public void createGroupData(String name, String description) {
-        String message;
-
-        if (name.isEmpty() || description.isEmpty())
-            message = "Name or description cannot be empty";
-        else
-            message = new GroupEntity(name, description).toString();
-
-        Toast.makeText(requireContext(), "Create: " + message, Toast.LENGTH_SHORT).show();
+        try {
+            GroupEntity groupEntity = new GroupEntity(name, description);
+            mViewModel.createGroup(groupEntity);
+        } catch (EntityException e) {
+            Toast.makeText(requireContext(), e.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override
     public void updateGroupData(String name, String description) {
-        String message;
-
-        if (name.isEmpty() || description.isEmpty())
-            message = "Name or description cannot be empty";
-        else
-            message = new GroupEntity(name, description).toString();
-
-        Toast.makeText(requireContext(), "Update: " + message, Toast.LENGTH_SHORT).show();
+        try {
+            GroupEntity groupEntity = new GroupEntity(name, description);
+            mViewModel.updateGroup(groupEntity);
+        } catch (EntityException e) {
+            Toast.makeText(requireContext(), e.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override
-    public void delete(GroupEntity id) {
-        Toast.makeText(requireContext(), "Delete Group: " + id, Toast.LENGTH_SHORT).show();
+    public void delete(GroupEntity groupEntity) {
+        mViewModel.deleteGroup(groupEntity);
     }
 
     class Adapter extends RecyclerView.Adapter<Adapter.GroupViewHolder> {
@@ -168,23 +175,6 @@ public class GroupsFragment extends Fragment implements
                 return true;
             }
         }
-    }
-
-    private List<GroupEntity> testData() {
-        List<GroupEntity> groupEntities = new LinkedList<>();
-
-        groupEntities.add(new GroupEntity("First Ever Created Group",
-                "And its awesome description!"));
-        groupEntities.add(new GroupEntity("Second Ever Created Group",
-                "And its awesome description"));
-        groupEntities.add(new GroupEntity("Third Ever Created Group",
-                "And its awesome description.."));
-        groupEntities.add(new GroupEntity("Another created group",
-                "And yet again another description"));
-        groupEntities.add(new GroupEntity("Group Im getting tired of it",
-                "Really tired description"));
-
-        return groupEntities;
     }
 
     @Override
