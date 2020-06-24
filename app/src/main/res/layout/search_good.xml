@@ -47,6 +47,7 @@
             android:id="@+id/spinnerGroup"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:gravity="center"
             app:layout_constraintBottom_toBottomOf="@+id/textGroup"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
@@ -67,9 +68,9 @@
             android:id="@+id/spinnerProducer"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:gravity="center"
             app:layout_constraintBottom_toBottomOf="@+id/textProducer"
             app:layout_constraintEnd_toEndOf="@+id/spinnerGroup"
-            app:layout_constraintStart_toStartOf="@+id/spinnerGroup"
             app:layout_constraintTop_toTopOf="@+id/textProducer" />
 
         <TextView

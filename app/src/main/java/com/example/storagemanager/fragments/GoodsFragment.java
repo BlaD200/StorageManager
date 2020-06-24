@@ -101,11 +101,13 @@ public class GoodsFragment extends Fragment implements
                 .map(GroupEntity::getName)
                 .collect(Collectors.toList());
         List<String> producers = mViewModel.getProducers();
+        groups.add(0, SPINNER_ANY);
+        producers.add(0, SPINNER_ANY);
 
         spinnerGroup.setAdapter(
-                new ArrayAdapter<>(requireContext(), R.layout.item_spinner, groups));
+                new ArrayAdapter<>(requireContext(), R.layout.item_spinner_white, groups));
         spinnerProducer.setAdapter(
-                new ArrayAdapter<>(requireContext(), R.layout.item_spinner, producers));
+                new ArrayAdapter<>(requireContext(), R.layout.item_spinner_white, producers));
 
         if (getArguments() != null && GoodsFragmentArgs
                 .fromBundle(getArguments()).getGroupName() != null) {
@@ -124,6 +126,11 @@ public class GoodsFragment extends Fragment implements
             Integer amountMax = Utils.getIntOrNull(editAmountMax);
             Integer priceMin = Utils.getIntOrNull(editPriceMin);
             Integer priceMax = Utils.getIntOrNull(editPriceMax);
+
+            if (group.equals(SPINNER_ANY))
+                group = null;
+            if (producer.equals(SPINNER_ANY))
+                producer = null;
 
             List<GoodEntity> goodEntities = mViewModel.getGoods(query, group, producer,
                     amountMin, amountMax, priceMin, priceMax);
@@ -288,4 +295,5 @@ public class GoodsFragment extends Fragment implements
     private static final String GOOD_DIALOG_TAG = "GOOD_DIALOG";
     private static final String DELETE_GOOD_DIALOG_TAG = "DELETE_GOOD_DIALOG";
     private static final String CHANGE_AMOUNT_DIALOG_TAG = "CHANGE_AMOUNT_DIALOG";
+    private static final String SPINNER_ANY = "Any";
 }

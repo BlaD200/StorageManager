@@ -10,98 +10,104 @@
             type="com.example.storagemanager.entities.GoodEntity" />
     </data>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content">
 
-        <TextView
-            android:id="@+id/textTitle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_large"
-            android:text="@string/good_creation"
-            android:textSize="@dimen/size_large"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <EditText
-            android:id="@+id/editName"
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/margin_small"
-            android:layout_marginTop="@dimen/margin_large"
-            android:layout_marginRight="@dimen/margin_small"
-            android:autofillHints="@string/name"
-            android:hint="@string/name"
-            android:inputType="text"
-            android:text="@{good.name}"
-            android:textAlignment="center"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textTitle" />
+            android:layout_height="wrap_content">
 
-        <Spinner
-            android:id="@+id/spinnerGroup"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_small"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/editName" />
+            <TextView
+                android:id="@+id/textTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_large"
+                android:text="@string/good_creation"
+                android:textSize="@dimen/size_medium"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
-        <EditText
-            android:id="@+id/editDescription"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/margin_small"
-            android:layout_marginTop="@dimen/margin_small"
-            android:layout_marginRight="@dimen/margin_small"
-            android:autofillHints="@string/description"
-            android:gravity="start|top"
-            android:hint="@string/description"
-            android:inputType="textMultiLine"
-            android:lines="8"
-            android:text="@{good.description}"
-            app:layout_constraintTop_toBottomOf="@+id/spinnerGroup" />
+            <EditText
+                android:id="@+id/editName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/margin_small"
+                android:layout_marginTop="@dimen/margin_large"
+                android:layout_marginRight="@dimen/margin_small"
+                android:autofillHints="@string/name"
+                android:hint="@string/name"
+                android:inputType="text"
+                android:text="@{good.name}"
+                android:textAlignment="center"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textTitle" />
 
-        <Spinner
-            android:id="@+id/spinnerProducer"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_small"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/editDescription" />
+            <Spinner
+                android:id="@+id/spinnerGroup"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_small"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/editName" />
 
-        <EditText
-            android:id="@+id/editAmount"
-            android:layout_width="150dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:autofillHints="@string/amount"
-            android:hint="@string/amount"
-            android:inputType="number"
-            android:text='@{good != null ? String.valueOf(good.amount) : ""}'
-            app:layout_constraintEnd_toStartOf="@+id/editPrice"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/spinnerProducer" />
+            <EditText
+                android:id="@+id/editDescription"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/margin_small"
+                android:layout_marginTop="@dimen/margin_small"
+                android:layout_marginRight="@dimen/margin_small"
+                android:autofillHints="@string/description"
+                android:gravity="start|top"
+                android:hint="@string/description"
+                android:inputType="textMultiLine"
+                android:lines="8"
+                android:text="@{good.description}"
+                app:layout_constraintTop_toBottomOf="@+id/spinnerGroup" />
 
-        <EditText
-            android:id="@+id/editPrice"
-            android:layout_width="150dp"
-            android:layout_height="wrap_content"
-            android:autofillHints="@string/price"
-            android:hint="@string/price"
-            android:inputType="number"
-            android:text='@{good != null ? String.valueOf(good.price) : ""}'
-            app:layout_constraintBottom_toBottomOf="@+id/editAmount"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/editAmount"
-            app:layout_constraintTop_toTopOf="@+id/editAmount" />
+            <Spinner
+                android:id="@+id/spinnerProducer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_small"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/editDescription" />
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            <EditText
+                android:id="@+id/editAmount"
+                android:layout_width="150dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:autofillHints="@string/amount"
+                android:hint="@string/amount"
+                android:inputType="number"
+                android:text='@{good != null ? String.valueOf(good.amount) : ""}'
+                app:layout_constraintEnd_toStartOf="@+id/editPrice"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/spinnerProducer" />
+
+            <EditText
+                android:id="@+id/editPrice"
+                android:layout_width="150dp"
+                android:layout_height="wrap_content"
+                android:autofillHints="@string/price"
+                android:hint="@string/price"
+                android:inputType="number"
+                android:text='@{good != null ? String.valueOf(good.price) : ""}'
+                app:layout_constraintBottom_toBottomOf="@+id/editAmount"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/editAmount"
+                app:layout_constraintTop_toTopOf="@+id/editAmount" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </ScrollView>
 
 </layout>
