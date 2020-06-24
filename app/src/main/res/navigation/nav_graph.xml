@@ -14,7 +14,7 @@
             android:id="@+id/action_goodsFragment_to_goodFragment"
             app:destination="@id/goodFragment" />
         <argument
-            android:name="groupId"
+            android:name="groupName"
             app:argType="string"
             app:nullable="true"
             android:defaultValue="@null" />
@@ -36,7 +36,7 @@
         android:label="GoodFragment"
         tools:layout="@layout/fragment_good" >
         <argument
-            android:name="goodId"
+            android:name="goodName"
             app:argType="string" />
         <action
             android:id="@+id/action_goodFragment_to_groupFragment"
@@ -49,7 +49,7 @@
         android:label="GroupFragment"
         tools:layout="@layout/fragment_group" >
         <argument
-            android:name="groupId"
+            android:name="groupName"
             app:argType="string" />
         <action
             android:id="@+id/action_groupFragment_to_goodsFragment"

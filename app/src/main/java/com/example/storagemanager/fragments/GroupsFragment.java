@@ -146,9 +146,8 @@ public class GroupsFragment extends Fragment implements
 
             @Override
             public void onClick(View v) {
-                // TODO pass id
                 NavDirections action = GroupsFragmentDirections
-                        .actionGroupsFragmentToGroupFragment("fake id");
+                        .actionGroupsFragmentToGroupFragment(mGroupEntity.getName());
                 Navigation.findNavController(v).navigate(action);
             }
 

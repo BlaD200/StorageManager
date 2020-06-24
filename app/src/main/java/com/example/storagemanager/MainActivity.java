@@ -24,6 +24,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.io.IOException;
 
+// TODO move all data to view models
 public class MainActivity extends AppCompatActivity {
 
     private LoginViewModel mLoginViewModel;
