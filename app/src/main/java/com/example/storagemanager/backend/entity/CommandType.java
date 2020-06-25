@@ -15,6 +15,8 @@ public enum CommandType {
     GET_GOOD(4),
     GET_GOODS(5),
 
+    GET_PRODUCERS(16),
+
     GET_GOOD_AMOUNT(6),
     RETIRE_GOOD_AMOUNT(7),
     PUT_GOOD_AMOUNT(8),

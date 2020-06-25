@@ -5,34 +5,28 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
 @Getter
 @Setter
 @ToString
+@NoArgsConstructor
 public class Group {
 
     private String name;
     private String description;
-    private Set<Good> goods;
 
 
     public Group(String name) {
         this.name = name;
-        goods = ConcurrentHashMap.newKeySet();
     }
 
 
     public Group(String name, String description) {
         this.name = name;
         this.description = description;
-        goods = ConcurrentHashMap.newKeySet();
-    }
-
-
-    public boolean add(Good good) {
-        return goods.add(good);
     }
 
 

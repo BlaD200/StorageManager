@@ -2,6 +2,7 @@ package com.example.storagemanager;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -17,6 +18,7 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
 import com.example.storagemanager.backend.client.StoreClientTCP;
+import com.example.storagemanager.backend.entity.CommandType;
 import com.example.storagemanager.databinding.ActivityMainBinding;
 import com.example.storagemanager.viewmodels.LoginViewModel;
 import com.example.storagemanager.viewmodels.factories.LoginVMFactory;
@@ -28,6 +30,7 @@ import java.io.IOException;
 // TODO add good and group repositories
 public class MainActivity extends AppCompatActivity {
 
+    private static final String USER_DATA_KEY = "com.example.storagemanager.userdata";
     private LoginViewModel mLoginViewModel;
     private BottomNavigationView mBottomNav;
     private NavController mNavController;
@@ -61,34 +64,6 @@ public class MainActivity extends AppCompatActivity {
 
         if (!mLoginViewModel.isAuthenticated())
             navigateToLogin();
-
-        new Thread(this::setupConnection).start();
-    }
-
-    private void setupConnection() {
-        StoreClientTCP storeClientTCP = new StoreClientTCP();
-        int connectionAttempts = 10;
-        while (connectionAttempts >= 0) {
-            try {
-                if (storeClientTCP.connect())
-                    try {
-                        connectionAttempts = 10;
-                        storeClientTCP.conversation();
-                    } catch (IOException e) {
-                        System.err.println("CONNECTION LOST. TRYING RECONNECT.");
-                    }
-            } catch (IOException e) {
-                System.err.println("COULD NOT ESTABLISH CONNECTION(" + (10 - connectionAttempts) + ").");
-            } finally {
-                storeClientTCP.disconnect();
-            }
-            try {
-                Thread.sleep(200);
-            } catch (InterruptedException ignored) {
-            }
-            --connectionAttempts;
-        }
-        System.err.println("Closing org.vsynytsyn.client.");
     }
 
     @Override
@@ -124,6 +99,4 @@ public class MainActivity extends AppCompatActivity {
                 .build();
         mNavController.navigate(R.id.loginFragment, null, navOptions);
     }
-
-    private static final String USER_DATA_KEY = "com.example.storagemanager.userdata";
 }

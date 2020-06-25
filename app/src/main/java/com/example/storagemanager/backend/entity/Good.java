@@ -2,12 +2,14 @@ package com.example.storagemanager.backend.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.NonNull;
 
 import java.util.Objects;
 
 @Data
 @AllArgsConstructor
+@NoArgsConstructor
 public class Good {
 
     @NonNull
@@ -17,20 +19,25 @@ public class Good {
     private Integer amount;
     private String producer;
 
+    private String groupName;
+
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Good that = (Good) o;
-        return name.equals(that.name);
+        Good good = (Good) o;
+        return name.equals(good.name) &&
+                producer.equals(good.producer) &&
+                groupName.equals(good.groupName);
     }
 
 
     @Override
     public int hashCode() {
-        return Objects.hash(name);
+        return Objects.hash(name, producer, groupName);
     }
+
 
 }
 

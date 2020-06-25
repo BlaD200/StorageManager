@@ -11,4 +11,13 @@ public class Utils {
             return null;
         }
     }
+
+
+    public static Double getDoubleOrNull(EditText editText) {
+        try {
+            return Double.parseDouble(editText.getText().toString());
+        } catch (NumberFormatException e) {
+            return null;
+        }
+    }
 }

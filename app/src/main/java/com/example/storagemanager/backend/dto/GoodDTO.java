@@ -14,4 +14,6 @@ public class GoodDTO {
     private Integer amount;
     private String description;
     private String producer;
+
+    private String group;
 }

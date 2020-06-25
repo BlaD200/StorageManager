@@ -19,6 +19,8 @@ import androidx.navigation.Navigation;
 
 import com.example.storagemanager.R;
 import com.example.storagemanager.backend.client.StoreClientTCP;
+import com.example.storagemanager.backend.cryptography.AsymmetricCryptography;
+import com.example.storagemanager.backend.cryptography.SymmetricCryptography;
 import com.example.storagemanager.databinding.FragmentLoginBinding;
 import com.example.storagemanager.entities.LoginEntity;
 import com.example.storagemanager.viewmodels.LoginViewModel;
@@ -26,8 +28,14 @@ import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.io.IOException;
-import java.net.HttpURLConnection;
-import java.net.URL;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
+import java.util.Arrays;
+
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
 
 public class LoginFragment extends Fragment {
 
@@ -52,7 +60,7 @@ public class LoginFragment extends Fragment {
                 .get(LoginViewModel.class);
 
         mBinding.btnLogin.setOnClickListener(v -> {
-                        String login = mBinding.editLogin.getText().toString();
+            String login = mBinding.editLogin.getText().toString();
             String password = mBinding.editPassword.getText().toString();
 
             LoginEntity loginEntity = new LoginEntity(login, password);
@@ -67,9 +75,6 @@ public class LoginFragment extends Fragment {
                         BaseTransientBottomBar.LENGTH_LONG).show();
             }
         });
-
-        UserLoginTask mAuthTask = new UserLoginTask();
-        mAuthTask.execute();
     }
 
     // ASYNCRONUS NETWORK PROCESS
@@ -89,12 +94,12 @@ public class LoginFragment extends Fragment {
             while (connectionAttempts >= 0) {
                 try {
                     if (storeClientTCP.connect())
-                        try {
+//                        try {
                             connectionAttempts = 10;
-                            storeClientTCP.conversation();
-                        } catch (IOException e) {
-                            System.err.println("CONNECTION LOST. TRYING RECONECT.");
-                        }
+//                            storeClientTCP.conversation();
+//                        } catch (IOException e) {
+//                            System.err.println("CONNECTION LOST. TRYING RECONECT.");
+//                        }
                 } catch (IOException e) {
                     System.err.println("COULD NOT ESTABLISH CONNECTION(" + (10 - connectionAttempts) + ").");
                     System.err.println(e.getMessage());

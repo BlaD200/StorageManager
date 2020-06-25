@@ -25,7 +25,7 @@ public class TCPNetwork implements INetwork {
 
     public TCPNetwork(Socket socket, SymmetricCryptography cryptography) throws IOException {
         this.socket = socket;
-        this.socket.setSoTimeout(timeout);
+//        this.socket.setSoTimeout(timeout);
         this.outputStream = socket.getOutputStream();
 
         this.cryptography = cryptography;

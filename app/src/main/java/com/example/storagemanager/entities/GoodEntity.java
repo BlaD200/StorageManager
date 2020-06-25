@@ -1,5 +1,6 @@
 package com.example.storagemanager.entities;
 
+import com.example.storagemanager.backend.entity.Good;
 import com.example.storagemanager.exceptions.EntityException;
 
 import lombok.Data;
@@ -35,5 +36,14 @@ public class GoodEntity {
         this.producer = producer;
         this.amount = amount;
         this.price = price;
+    }
+
+    public GoodEntity(Good good) {
+        this.name = good.getName();
+        this.group = good.getGroupName();
+        this.description = good.getDescription();
+        this.producer = good.getProducer();
+        this.amount = good.getAmount();
+        this.price = good.getPrice().intValue();
     }
 }

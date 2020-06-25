@@ -1,15 +1,15 @@
 package com.example.storagemanager.backend.client;
 
+import android.util.Log;
+
 import com.example.storagemanager.backend.cryptography.SymmetricCryptography;
-import com.example.storagemanager.backend.dto.GoodDTO;
 import com.example.storagemanager.backend.entity.CommandType;
 import com.example.storagemanager.backend.entity.Message;
 import com.example.storagemanager.backend.entity.Packet;
+import com.example.storagemanager.backend.network.INetwork;
 import com.example.storagemanager.backend.network.TCPNetwork;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
-import java.net.InetAddress;
 import java.net.Socket;
 import java.net.SocketTimeoutException;
 
@@ -17,71 +17,104 @@ public class StoreClientTCP extends BaseClient {
 
     private final int userID = 2;
     private final byte appID;
-    private final ObjectMapper mapper;
     Long messageID = 0L;
     private TCPNetwork network;
+    private boolean isConnected;
 
 
     public StoreClientTCP() {
-        mapper = new ObjectMapper();
         appID = (byte) (Math.random() * 100);
     }
 
 
-    public void conversation() throws IOException {
-        int packedToSent = 200;
-        while (packedToSent > 0) {
-            GoodDTO goodDTO = GoodDTO.builder().name(String.valueOf(appID) + messageID).amount(100).price(40.0).build();
-            Message message = new Message(CommandType.CREATE_GOOD, userID, mapper.writeValueAsString(goodDTO));
-            Packet packet = new Packet(appID, messageID++, message);
+    public synchronized Message conversation(CommandType command, String message) {
+        Message m = new Message(command, userID, message);
+        Packet packet = new Packet(appID, messageID++, m);
 
-            System.out.print(ANSI_BLUE + "Sending(" + packet.getMessageID() + ")... " + ANSI_RESET);
-            network.sendPacket(packet);
-            System.out.println(ANSI_BRIGHT_CYAN + "Sent." + ANSI_RESET);
+        Log.w("StoreClient", "Sending: " + m);
 
+        if (!isConnected)
+            setupConnection();
+
+        if (network != null) {
             try {
-                Packet reply;
-                reply = network.receivePacket();
-                System.out.print("Server replied: ");
-                System.out.println(ANSI_YELLOW + reply.getMessage().getMessageText() + ANSI_RESET);
-                --packedToSent;
-            } catch (SocketTimeoutException e) {
-                throw e;
+                return sendPacketForReply(packet).getMessage();
             } catch (IOException e) {
-                --messageID;
-                throw e;
-            }
-
-            try {
-                Thread.sleep(100);
-            } catch (InterruptedException ignored) {
+                Log.e("StoreClient", "CONNECTION LOST. TRYING RECONECT.");
+                setupConnection();
+                if (network != null)
+                    try {
+                        return sendPacketForReply(packet).getMessage();
+                    } catch (IOException e2) {
+                        Log.e("StoreClient", "CONNECTION LOST. TRYING RECONECT.");
+                        return null;
+                    }
+                return null;
             }
         }
+        return null;
+    }
+
+
+    private Packet sendPacketForReply(Packet packet) throws IOException {
+        Log.w("StoreClient", "Sending(" + packet.getMessageID() + ")... ");
+        network.sendPacket(packet);
+        Log.w("StoreClient", "Sent.");
+
         try {
-            Message message = new Message(CommandType.NONE, userID, "CLOSE");
-            Packet packet = new Packet(appID, messageID++, message);
-            System.out.print(ANSI_BLUE + "Sending... " + packet.getMessageID() + ANSI_RESET);
-            network.sendPacket(packet);
-            System.out.println(ANSI_BRIGHT_CYAN + "Sent." + ANSI_RESET);
+            Packet reply;
+            reply = network.receivePacket();
+            Log.w("StoreClient", "Server replied: ");
+            Log.w("StoreClient", reply.getMessage().getMessageText());
+            return reply;
+        } catch (SocketTimeoutException e) {
+            throw e;
         } catch (IOException e) {
-            e.printStackTrace();
+            --messageID;
             throw e;
         }
+    }
+
+
+    private synchronized void setupConnection() {
+        int connectionAttempts = 10;
+        while (connectionAttempts >= 0) {
+            try {
+                if (connect()) {
+                    this.isConnected = true;
+                    return;
+                }
+            } catch (IOException e) {
+                Log.e("StoreClient", "COULD NOT ESTABLISH CONNECTION(" + (10 - connectionAttempts) + ").");
+            }
+            try {
+                Thread.sleep(200);
+            } catch (InterruptedException ignored) {
+            }
+            --connectionAttempts;
+        }
+        Log.e("StoreClient", "Closing client.");
+        network = null;
+        isConnected = false;
     }
 
 
     @Override
     public boolean connect() throws IOException {
         SymmetricCryptography symmetricCryptography;
-        Socket socket = new Socket("10.0.2.2", 8080);
+//        Socket socket = new Socket("10.0.2.2", INetwork.TCP_PORT);
+        Socket socket = new Socket("192.168.1.186", INetwork.TCP_PORT);
 
-        symmetricCryptography = configureSecureConnection(socket);
+        // TODO FIX INSECURE CONNECTION
+//        symmetricCryptography = configureSecureConnection(socket);
+        symmetricCryptography = null;
         if (symmetricCryptography == null) {
-            System.out.println("Couldn't create secure connection. Aborting connection...");
-            return false;
+//            Log.w("StoreClient", "Couldn't create secure connection. Aborting connection...");
+            Log.w("StoreClient", "Couldn't create secure connection. USED UNSAFE ONE.");
+//            return false;
         }
-        System.out.println("Connection established!");
-        network = new TCPNetwork(socket, symmetricCryptography);
+        Log.w("StoreClient", "Connection established!");
+        this.network = new TCPNetwork(socket, symmetricCryptography);
         return true;
     }
 
@@ -91,6 +124,7 @@ public class StoreClientTCP extends BaseClient {
         if (network != null) {
             network.close();
             network = null;
+            isConnected = false;
         }
     }
 }

@@ -78,9 +78,9 @@ public abstract class BaseClient implements IClient {
                 Thread.sleep(50);
             } catch (InterruptedException ignored) {
             }
-            System.out.println("Sending encrypted encryption algorithm...");
-            out.write(asymmetricCryptography.encryptByteArray("AES".getBytes()));
-            out.flush();
+//            System.out.println("Sending encrypted encryption algorithm...");
+//            out.write(asymmetricCryptography.encryptByteArray("AES".getBytes()));
+//            out.flush();
 
             // check if the server closed the connection.
             if (in.read() == -1)

@@ -24,6 +24,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.storagemanager.R;
 import com.example.storagemanager.Utils;
+import com.example.storagemanager.backend.entity.Good;
+import com.example.storagemanager.backend.entity.Group;
+import com.example.storagemanager.Utils;
 import com.example.storagemanager.databinding.FragmentGoodsBinding;
 import com.example.storagemanager.databinding.ItemGoodBinding;
 import com.example.storagemanager.entities.GoodEntity;
@@ -33,11 +36,18 @@ import com.example.storagemanager.fragments.dialogs.ChangeAmountDialog;
 import com.example.storagemanager.fragments.dialogs.DeleteDialog;
 import com.example.storagemanager.fragments.dialogs.GoodDialog;
 import com.example.storagemanager.viewmodels.GoodsViewModel;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.google.android.material.appbar.AppBarLayout;
 
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
+
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
+import io.reactivex.rxjava3.schedulers.Schedulers;
 
 public class GoodsFragment extends Fragment implements
         GoodDialog.CreateGoodListener,
@@ -45,10 +55,14 @@ public class GoodsFragment extends Fragment implements
         ChangeAmountDialog.ChangeAmountListener,
         DeleteDialog.DeleteListener<GoodEntity> {
 
+    private static final String GOOD_DIALOG_TAG = "GOOD_DIALOG";
+    private static final String DELETE_GOOD_DIALOG_TAG = "DELETE_GOOD_DIALOG";
+    private static final String CHANGE_AMOUNT_DIALOG_TAG = "CHANGE_AMOUNT_DIALOG";
     private FragmentGoodsBinding mBinding;
     private GoodsViewModel mViewModel;
     private AppBarLayout mAppBarLayout;
     private Adapter mAdapter;
+    private boolean mIsExpanded = true;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -96,16 +110,36 @@ public class GoodsFragment extends Fragment implements
         EditText editPriceMin = mBinding.searchArea.editPriceMin;
         EditText editPriceMax = mBinding.searchArea.editPriceMax;
 
-        List<String> groups = mViewModel.getGroups()
-                .stream()
-                .map(GroupEntity::getName)
-                .collect(Collectors.toList());
-        List<String> producers = mViewModel.getProducers();
-
-        spinnerGroup.setAdapter(
-                new ArrayAdapter<>(requireContext(), R.layout.item_spinner, groups));
-        spinnerProducer.setAdapter(
-                new ArrayAdapter<>(requireContext(), R.layout.item_spinner, producers));
+        List<String> groups = new ArrayList<>();
+        mViewModel.getGroups()
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(reply -> {
+                    try {
+                        List<Group> groupList = mViewModel.getMapper().readValue(reply, new TypeReference<List<Group>>() {
+                        });
+                        groups.addAll(groupList.stream().filter(Objects::nonNull).map(Group::getName).collect(Collectors.toList()));
+                        spinnerGroup.setAdapter(
+                                new ArrayAdapter<>(requireContext(), R.layout.item_spinner, groups));
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                });
+        List<String> producers = new ArrayList<>();
+        mViewModel.getProducers()
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(reply -> {
+                    try {
+                        List<String> producersList = mViewModel.getMapper().readValue(reply, new TypeReference<List<String>>() {
+                        });
+                        producers.addAll(producersList.stream().filter(Objects::nonNull).collect(Collectors.toList()));
+                        spinnerProducer.setAdapter(
+                                new ArrayAdapter<>(requireContext(), R.layout.item_spinner, producers));
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                });
 
         if (getArguments() != null && GoodsFragmentArgs
                 .fromBundle(getArguments()).getGroupName() != null) {
@@ -118,17 +152,32 @@ public class GoodsFragment extends Fragment implements
 
         mBinding.searchArea.btnSearch.setOnClickListener(v -> {
             String query = editQuery.getText().toString();
-            String group = spinnerGroup.getSelectedItem().toString();
-            String producer = spinnerProducer.getSelectedItem().toString();
+            String group = spinnerGroup.getSelectedItem() != null ? spinnerGroup.getSelectedItem().toString() : null;
+            String producer = spinnerProducer.getSelectedItem() != null ? spinnerProducer.getSelectedItem().toString() : null;
             Integer amountMin = Utils.getIntOrNull(editAmountMin);
             Integer amountMax = Utils.getIntOrNull(editAmountMax);
             Integer priceMin = Utils.getIntOrNull(editPriceMin);
             Integer priceMax = Utils.getIntOrNull(editPriceMax);
 
-            List<GoodEntity> goodEntities = mViewModel.getGoods(query, group, producer,
-                    amountMin, amountMax, priceMin, priceMax);
+//            List<GoodEntity> goodEntities = mViewModel.getGoods(query, group, producer,
+//                    amountMin, amountMax, priceMin, priceMax);
 
-            mAdapter.setData(goodEntities);
+            mViewModel.getGoods(query, group, producer, amountMin, amountMax, priceMin, priceMax)
+                    .subscribeOn(Schedulers.newThread())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(reply -> {
+                        try {
+                            if (reply.equals("[]"))
+                                mAdapter.setData(null);
+                            List<Good> goodsReply = mViewModel.getMapper().readValue(reply, new TypeReference<List<Good>>() {
+                            });
+                            mAdapter.setData(goodsReply.stream().filter(Objects::nonNull).map(GoodEntity::new).collect(Collectors.toList()));
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    });
+
+//            mAdapter.setData(goodEntities);
         });
     }
 
@@ -282,10 +331,4 @@ public class GoodsFragment extends Fragment implements
             }
         }
     }
-
-    private boolean mIsExpanded = true;
-
-    private static final String GOOD_DIALOG_TAG = "GOOD_DIALOG";
-    private static final String DELETE_GOOD_DIALOG_TAG = "DELETE_GOOD_DIALOG";
-    private static final String CHANGE_AMOUNT_DIALOG_TAG = "CHANGE_AMOUNT_DIALOG";
 }
