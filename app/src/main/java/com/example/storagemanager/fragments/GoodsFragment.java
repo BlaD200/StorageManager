@@ -136,7 +136,7 @@ public class GoodsFragment extends Fragment implements
                         producers.addAll(producersList.stream().filter(Objects::nonNull).collect(Collectors.toList()));
                         producers.add(0, SPINNER_ANY);
                         spinnerProducer.setAdapter(
-                                new ArrayAdapter<>(requireContext(), R.layout.item_spinner_white, producers));
+                                new ArrayAdapter<>(requireContext(), R.layout.item_spinner_black, producers));
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -153,6 +153,7 @@ public class GoodsFragment extends Fragment implements
 
         mBinding.searchArea.btnSearch.setOnClickListener(v -> {
             String query = editQuery.getText().toString();
+            // TODO selected item cannot be null?
             String group = spinnerGroup.getSelectedItem() != null ? spinnerGroup.getSelectedItem().toString() : null;
             String producer = spinnerProducer.getSelectedItem() != null ? spinnerProducer.getSelectedItem().toString() : null;
             Integer amountMin = Utils.getIntOrNull(editAmountMin);

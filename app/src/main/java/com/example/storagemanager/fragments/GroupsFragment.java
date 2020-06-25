@@ -33,6 +33,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -69,7 +70,10 @@ public class GroupsFragment extends Fragment implements
                 .get(GroupsViewModel.class);
 
         RecyclerView recyclerView = mBinding.groupsList;
+        mAdapter = new Adapter(new LinkedList<>());
+
         recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
+        recyclerView.setAdapter(mAdapter);
 
         List<GroupEntity> groupEntities = new ArrayList<>();
         mViewModel.getGroups(null)
@@ -77,10 +81,11 @@ public class GroupsFragment extends Fragment implements
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(reply -> {
                     try {
+                        Toast.makeText(requireContext(), "Got Groups", Toast.LENGTH_SHORT).show();
                         List<Group> groupList = mViewModel.getMapper().readValue(reply, new TypeReference<List<Group>>() {
                         });
                         groupEntities.addAll(groupList.stream().filter(Objects::nonNull).map(GroupEntity::new).collect(Collectors.toList()));
-                        recyclerView.setAdapter(new Adapter(groupEntities));
+                        mAdapter.setData(groupEntities);
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
