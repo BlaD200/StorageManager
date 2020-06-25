@@ -46,7 +46,7 @@ public class GroupFragment extends Fragment {
         String groupName = GroupFragmentArgs.fromBundle(requireArguments()).getGroupName();
 
         viewModel.getGroupByName(groupName)
-                .subscribeOn(Schedulers.newThread())
+                .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(reply -> {
                     try {
@@ -55,7 +55,7 @@ public class GroupFragment extends Fragment {
                         mBinding.setGroup(groupEntity);
 
                         viewModel.getGroupTotalPrice(groupEntity)
-                                .subscribeOn(Schedulers.newThread())
+                                .subscribeOn(Schedulers.io())
                                 .observeOn(AndroidSchedulers.mainThread())
                                 .subscribe(reply2 -> {
                                     mBinding.setTotalPrice((int) Double.parseDouble(reply2));

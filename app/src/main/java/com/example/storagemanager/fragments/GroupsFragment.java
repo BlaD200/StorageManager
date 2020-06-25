@@ -73,7 +73,7 @@ public class GroupsFragment extends Fragment implements
 
         List<GroupEntity> groupEntities = new ArrayList<>();
         mViewModel.getGroups(null)
-                .subscribeOn(Schedulers.newThread())
+                .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(reply -> {
                     try {
@@ -96,7 +96,12 @@ public class GroupsFragment extends Fragment implements
     public void createGroupData(String name, String description) {
         try {
             GroupEntity groupEntity = new GroupEntity(name, description);
-            mViewModel.createGroup(groupEntity);
+            mViewModel.createGroup(groupEntity)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(reply -> Toast.makeText(getContext(),
+                            Boolean.parseBoolean(reply) ?
+                                    "Created successfully!" : "Creation failed.", Toast.LENGTH_SHORT).show());
         } catch (EntityException e) {
             Toast.makeText(requireContext(), e.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
         }
@@ -114,7 +119,12 @@ public class GroupsFragment extends Fragment implements
 
     @Override
     public void delete(GroupEntity groupEntity) {
-        mViewModel.deleteGroup(groupEntity);
+        mViewModel.deleteGroup(groupEntity)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(reply -> Toast.makeText(getContext(),
+                        Boolean.parseBoolean(reply) ?
+                                "Removed successfully!" : "Removing failed.", Toast.LENGTH_SHORT).show());
     }
 
     @Override
@@ -131,7 +141,7 @@ public class GroupsFragment extends Fragment implements
             public boolean onQueryTextSubmit(String query) {
                 List<GroupEntity> groups = new ArrayList<>();
                 mViewModel.getGroups(query)
-                        .subscribeOn(Schedulers.newThread())
+                        .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(reply -> {
                             try {

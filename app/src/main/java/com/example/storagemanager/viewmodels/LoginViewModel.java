@@ -2,11 +2,15 @@ package com.example.storagemanager.viewmodels;
 
 import android.content.SharedPreferences;
 
-import androidx.lifecycle.ViewModel;
-
+import com.example.storagemanager.backend.dto.UserDTO;
+import com.example.storagemanager.backend.entity.CommandType;
 import com.example.storagemanager.entities.LoginEntity;
 
-public class LoginViewModel extends ViewModel {
+import org.apache.commons.codec.digest.DigestUtils;
+
+import io.reactivex.rxjava3.core.Observable;
+
+public class LoginViewModel extends BaseViewModel {
 
     private final SharedPreferences mPreferences;
     private LoginEntity mLoginEntity;
@@ -15,10 +19,24 @@ public class LoginViewModel extends ViewModel {
         mPreferences = preferences;
     }
 
-    public boolean authenticate(LoginEntity loginEntity) {
-        // TODO authenticate
-        return loginEntity.getLogin().equals("login") &&
-                loginEntity.getPassword().equals("password");
+    public @io.reactivex.rxjava3.annotations.NonNull Observable<String> authenticate(LoginEntity loginEntity) {
+        return Observable.defer(() -> {
+            String reply = clientConnection.conversation(
+                    CommandType.LOGIN,
+                    mapper.writeValueAsString(
+                            UserDTO.builder()
+                                    .login(loginEntity.getLogin())
+                                    .build())
+            ).getMessageText();
+            try {
+                UserDTO user = mapper.readValue(reply, UserDTO.class);
+                if (user.getPassword().equals(DigestUtils.md5Hex(loginEntity.getPassword())))
+                    return Observable.just(Boolean.toString(true));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return Observable.just(Boolean.toString(false));
+        });
     }
 
     public boolean isAuthenticated() {

@@ -37,6 +37,9 @@ import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
+import io.reactivex.rxjava3.schedulers.Schedulers;
+
 public class LoginFragment extends Fragment {
 
     private FragmentLoginBinding mBinding;
@@ -65,60 +68,20 @@ public class LoginFragment extends Fragment {
 
             LoginEntity loginEntity = new LoginEntity(login, password);
 
-            if (mLoginViewModel.authenticate(loginEntity)) {
-                mLoginViewModel.save(loginEntity);
+            mLoginViewModel.authenticate(loginEntity)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(isLoggedIn -> {
+                        if (Boolean.parseBoolean(isLoggedIn)) {
+                            mLoginViewModel.save(loginEntity);
 
-                NavDirections action = LoginFragmentDirections.actionLoginFragmentToGoodsFragment();
-                Navigation.findNavController(view).navigate(action);
-            } else {
-                Snackbar.make(requireView(), "Wrong Login or Password",
-                        BaseTransientBottomBar.LENGTH_LONG).show();
-            }
+                            NavDirections action = LoginFragmentDirections.actionLoginFragmentToGoodsFragment();
+                            Navigation.findNavController(view).navigate(action);
+                        } else {
+                            Snackbar.make(requireView(), "Wrong Login or Password",
+                                    BaseTransientBottomBar.LENGTH_LONG).show();
+                        }
+                    });
         });
-    }
-
-    // ASYNCRONUS NETWORK PROCESS
-
-    public class UserLoginTask extends AsyncTask<String, String, String> {
-
-        @Override
-        protected void onPreExecute() {
-        }
-
-
-        @RequiresApi(api = Build.VERSION_CODES.O)
-        @Override
-        protected String doInBackground(String... params) {
-            StoreClientTCP storeClientTCP = new StoreClientTCP();
-            int connectionAttempts = 10;
-            while (connectionAttempts >= 0) {
-                try {
-                    if (storeClientTCP.connect())
-//                        try {
-                            connectionAttempts = 10;
-//                            storeClientTCP.conversation();
-//                        } catch (IOException e) {
-//                            System.err.println("CONNECTION LOST. TRYING RECONECT.");
-//                        }
-                } catch (IOException e) {
-                    System.err.println("COULD NOT ESTABLISH CONNECTION(" + (10 - connectionAttempts) + ").");
-                    System.err.println(e.getMessage());
-                } finally {
-                    storeClientTCP.disconnect();
-                }
-                try {
-                    Thread.sleep(200);
-                } catch (InterruptedException ignored) {
-                }
-                --connectionAttempts;
-            }
-            System.err.println("Closing org.vsynytsyn.client.");
-            return "";
-        }
-
-        protected void onPostExecute(String success) {
-            Log.i(success, "");
-            //attemptLogin();
-        }
     }
 }

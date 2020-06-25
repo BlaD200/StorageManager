@@ -111,7 +111,7 @@ public class GoodsFragment extends Fragment implements
 
         List<String> groups = new ArrayList<>();
         mViewModel.getGroups()
-                .subscribeOn(Schedulers.newThread())
+                .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(reply -> {
                     try {
@@ -127,7 +127,7 @@ public class GoodsFragment extends Fragment implements
                 });
         List<String> producers = new ArrayList<>();
         mViewModel.getProducers()
-                .subscribeOn(Schedulers.newThread())
+                .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(reply -> {
                     try {
@@ -169,7 +169,7 @@ public class GoodsFragment extends Fragment implements
 //                    amountMin, amountMax, priceMin, priceMax);
 
             mViewModel.getGoods(query, group, producer, amountMin, amountMax, priceMin, priceMax)
-                    .subscribeOn(Schedulers.newThread())
+                    .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(reply -> {
                         try {
@@ -209,7 +209,12 @@ public class GoodsFragment extends Fragment implements
                                String producer, Integer amount, Integer price) {
         try {
             GoodEntity goodEntity = new GoodEntity(name, group, description, producer, amount, price);
-            mViewModel.createGood(goodEntity);
+            mViewModel.createGood(goodEntity)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(reply -> Toast.makeText(getContext(),
+                            Boolean.parseBoolean(reply) ?
+                                    "Created successfully!" : "Creation failed.", Toast.LENGTH_SHORT).show());
         } catch (EntityException e) {
             Toast.makeText(requireContext(), e.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
         }
@@ -228,17 +233,30 @@ public class GoodsFragment extends Fragment implements
 
     @Override
     public void delete(GoodEntity goodEntity) {
-        mViewModel.deleteGood(goodEntity);
+        mViewModel.deleteGood(goodEntity)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(reply -> Toast.makeText(getContext(),
+                        Boolean.parseBoolean(reply) ?
+                                "Removed successfully!" : "Removing failed.", Toast.LENGTH_SHORT).show());
     }
 
     @Override
     public void addAmount(GoodEntity goodEntity, int amount) {
-        mViewModel.changeAmount(goodEntity, amount);
+        mViewModel.changeAmount(goodEntity, amount)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(reply -> Toast.makeText(getContext(),
+                        reply, Toast.LENGTH_SHORT).show());
     }
 
     @Override
     public void removeAmount(GoodEntity goodEntity, int amount) {
-        mViewModel.changeAmount(goodEntity, -amount);
+        mViewModel.changeAmount(goodEntity, -amount)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(reply -> Toast.makeText(getContext(),
+                        reply, Toast.LENGTH_SHORT).show());
     }
 
     class Adapter extends RecyclerView.Adapter<Adapter.GoodViewHolder> {

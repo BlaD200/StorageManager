@@ -1,5 +1,7 @@
 package com.example.storagemanager.viewmodels;
 
+import android.util.Log;
+
 import com.example.storagemanager.backend.dto.GoodDTO;
 import com.example.storagemanager.backend.dto.PagingDTO;
 import com.example.storagemanager.backend.dto.criteria.Criteria;
@@ -75,6 +77,7 @@ public class GoodsViewModel extends BaseViewModel {
     }
 
     public @NonNull Observable<String> createGood(GoodEntity goodEntity) {
+        Log.w("GoodsViewModel", "Creating good: " +goodEntity.getName());
         return Observable.defer(() -> {
             String reply = clientConnection.conversation(
                     CommandType.CREATE_GOOD,

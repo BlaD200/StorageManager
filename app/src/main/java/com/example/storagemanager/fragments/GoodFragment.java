@@ -46,7 +46,7 @@ public class GoodFragment extends Fragment {
 
         String goodName = GoodFragmentArgs.fromBundle(requireArguments()).getGoodName();
         viewModel.getGoodByName(goodName)
-                .subscribeOn(Schedulers.newThread())
+                .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(reply -> {
                     try {
