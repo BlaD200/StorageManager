@@ -93,8 +93,8 @@ public class GoodDialog extends DialogFragment {
                 .setView(binding.getRoot())
                 .setPositiveButton(mCreateListener != null ?
                         R.string.create : R.string.update, (dialog, id) -> {
-                    String name = binding.editName.getText().toString();
-                    String group = binding.spinnerGroup.getSelectedItem().toString();
+                    String name = binding.editName.getText() != null ? binding.editName.getText().toString() : null;
+                    String group = binding.spinnerGroup.getSelectedItem() != null ? binding.spinnerGroup.getSelectedItem().toString() : null;
                     String description = binding.editDescription.getText().toString();
                     String producer = binding.spinnerProducer.getSelectedItem().toString();
                     Integer amount = Utils.getIntOrNull(binding.editAmount);

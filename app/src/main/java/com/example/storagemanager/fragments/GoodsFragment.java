@@ -96,6 +96,8 @@ public class GoodsFragment extends Fragment implements
         });
 
         setupFilter();
+
+        mBinding.searchArea.btnSearch.callOnClick();
     }
 
     private void setupFilter() {
@@ -107,35 +109,19 @@ public class GoodsFragment extends Fragment implements
         EditText editPriceMin = mBinding.searchArea.editPriceMin;
         EditText editPriceMax = mBinding.searchArea.editPriceMax;
 
-        List<String> groups = new ArrayList<>();
+
         mViewModel.getGroups()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(reply -> {
                     try {
+                        List<String> groups = new ArrayList<>();
                         List<Group> groupList = mViewModel.getMapper().readValue(reply, new TypeReference<List<Group>>() {
                         });
                         groups.addAll(groupList.stream().filter(Objects::nonNull).map(Group::getName).collect(Collectors.toList()));
                         groups.add(0, SPINNER_ANY);
                         spinnerGroup.setAdapter(
                                 new ArrayAdapter<>(requireContext(), R.layout.item_spinner_white, groups));
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                });
-        List<String> producers = new ArrayList<>();
-        mViewModel.getProducers()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(reply -> {
-                    try {
-                        List<String> producersList = mViewModel.getMapper().readValue(reply, new TypeReference<List<String>>() {
-                        });
-                        producers.addAll(producersList.stream().filter(Objects::nonNull).collect(Collectors.toList()));
-                        producers.add(0, SPINNER_ANY);
-                        spinnerProducer.setAdapter(
-                                new ArrayAdapter<>(requireContext(), R.layout.item_spinner_white, producers));
-
                         if (getArguments() != null && GoodsFragmentArgs
                                 .fromBundle(getArguments()).getGroupName() != null) {
                             String groupName = GoodsFragmentArgs.fromBundle(getArguments()).getGroupName();
@@ -146,6 +132,23 @@ public class GoodsFragment extends Fragment implements
                         }
 
                         mBinding.searchArea.btnSearch.callOnClick();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                });
+
+        mViewModel.getProducers()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(reply -> {
+                    try {
+                        List<String> producers = new ArrayList<>();
+                        List<String> producersList = mViewModel.getMapper().readValue(reply, new TypeReference<List<String>>() {
+                        });
+                        producers.addAll(producersList.stream().filter(Objects::nonNull).collect(Collectors.toList()));
+                        producers.add(0, SPINNER_ANY);
+                        spinnerProducer.setAdapter(
+                                new ArrayAdapter<>(requireContext(), R.layout.item_spinner_white, producers));
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -166,8 +169,6 @@ public class GoodsFragment extends Fragment implements
             if (producer != null && producer.equals(SPINNER_ANY))
                 producer = null;
 
-//            List<GoodEntity> goodEntities = mViewModel.getGoods(query, group, producer,
-//                    amountMin, amountMax, priceMin, priceMax);
 
             mViewModel.getGoods(query, group, producer, amountMin, amountMax, priceMin, priceMax)
                     .subscribeOn(Schedulers.io())
@@ -184,7 +185,6 @@ public class GoodsFragment extends Fragment implements
                         }
                     });
 
-//            mAdapter.setData(goodEntities);
         });
     }
 
