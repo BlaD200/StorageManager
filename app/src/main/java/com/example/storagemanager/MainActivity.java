@@ -53,7 +53,7 @@ public class MainActivity extends AppCompatActivity {
         mBottomNav = binding.bottomNavigationView;
         mNavController = Navigation.findNavController(this, R.id.navHostFragment);
         mAppBarConfig = new AppBarConfiguration
-                .Builder(R.id.goodsFragment, R.id.groupsFragment)
+                .Builder(R.id.goodsFragment, R.id.groupsFragment, R.id.producersFragment)
                 .build();
 
         setSupportActionBar(binding.toolbar);

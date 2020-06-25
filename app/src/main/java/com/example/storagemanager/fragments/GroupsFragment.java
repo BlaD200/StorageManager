@@ -140,7 +140,7 @@ public class GroupsFragment extends Fragment implements
         actionSearchView.setVisible(true);
 
         SearchView searchView = (SearchView) actionSearchView.getActionView();
-        searchView.setQueryHint(getResources().getString(R.string.search_view_hint));
+        searchView.setQueryHint(getResources().getString(R.string.group_search_view_hint));
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {

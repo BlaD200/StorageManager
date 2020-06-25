@@ -11,4 +11,9 @@
         android:icon="@drawable/ic_shop"
         android:title="@string/groups" />
 
+    <item
+        android:id="@+id/producersFragment"
+        android:icon="@drawable/ic_producer"
+        android:title="@string/producers" />
+
 </menu>
