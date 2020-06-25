@@ -7,4 +7,4 @@
     android:textAlignment="center"
     android:ellipsize="marquee"
     android:singleLine="true"
-    android:textColor="#FFFF" />
+    android:textColor="@android:color/black" />

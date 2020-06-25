@@ -4,18 +4,24 @@ import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.widget.ArrayAdapter;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.DialogFragment;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.example.storagemanager.R;
 import com.example.storagemanager.Utils;
 import com.example.storagemanager.databinding.DialogGoodBinding;
 import com.example.storagemanager.entities.GoodEntity;
+import com.example.storagemanager.entities.GroupEntity;
+import com.example.storagemanager.viewmodels.GoodsViewModel;
 
+import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 public class GoodDialog extends DialogFragment {
 
@@ -50,6 +56,20 @@ public class GoodDialog extends DialogFragment {
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         DialogGoodBinding binding = DataBindingUtil.inflate(LayoutInflater.from(requireContext()),
                 R.layout.dialog_good, null, false);
+
+        GoodsViewModel mViewModel = new ViewModelProvider(this)
+                .get(GoodsViewModel.class);
+
+        List<String> groups = mViewModel.getGroups()
+                .stream()
+                .map(GroupEntity::getName)
+                .collect(Collectors.toList());
+        List<String> producers = mViewModel.getProducers();
+
+        binding.spinnerGroup.setAdapter(new ArrayAdapter<>(
+                requireContext(), R.layout.item_spinner_black, groups));
+        binding.spinnerProducer.setAdapter(new ArrayAdapter<>(
+                requireContext(), R.layout.item_spinner_black, producers));
 
         binding.setGood(mGoodEntity);
 

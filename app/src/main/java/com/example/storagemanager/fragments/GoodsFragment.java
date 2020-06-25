@@ -119,6 +119,7 @@ public class GoodsFragment extends Fragment implements
                         List<Group> groupList = mViewModel.getMapper().readValue(reply, new TypeReference<List<Group>>() {
                         });
                         groups.addAll(groupList.stream().filter(Objects::nonNull).map(Group::getName).collect(Collectors.toList()));
+                        groups.add(0, SPINNER_ANY);
                         spinnerGroup.setAdapter(
                                 new ArrayAdapter<>(requireContext(), R.layout.item_spinner, groups));
                     } catch (IOException e) {
@@ -134,6 +135,7 @@ public class GoodsFragment extends Fragment implements
                         List<String> producersList = mViewModel.getMapper().readValue(reply, new TypeReference<List<String>>() {
                         });
                         producers.addAll(producersList.stream().filter(Objects::nonNull).collect(Collectors.toList()));
+                        producers.add(0, SPINNER_ANY);
                         spinnerProducer.setAdapter(
                                 new ArrayAdapter<>(requireContext(), R.layout.item_spinner, producers));
                     } catch (IOException e) {
