@@ -96,8 +96,6 @@ public class GoodsFragment extends Fragment implements
         });
 
         setupFilter();
-
-        mBinding.searchArea.btnSearch.callOnClick();
     }
 
     private void setupFilter() {
@@ -136,20 +134,22 @@ public class GoodsFragment extends Fragment implements
                         producers.addAll(producersList.stream().filter(Objects::nonNull).collect(Collectors.toList()));
                         producers.add(0, SPINNER_ANY);
                         spinnerProducer.setAdapter(
-                                new ArrayAdapter<>(requireContext(), R.layout.item_spinner_black, producers));
+                                new ArrayAdapter<>(requireContext(), R.layout.item_spinner_white, producers));
+
+                        if (getArguments() != null && GoodsFragmentArgs
+                                .fromBundle(getArguments()).getGroupName() != null) {
+                            String groupName = GoodsFragmentArgs.fromBundle(getArguments()).getGroupName();
+
+                            for (int i = 0; i < groups.size(); i++)
+                                if (groups.get(i).equals(groupName))
+                                    mBinding.searchArea.spinnerGroup.setSelection(i);
+                        }
+
+                        mBinding.searchArea.btnSearch.callOnClick();
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
                 });
-
-        if (getArguments() != null && GoodsFragmentArgs
-                .fromBundle(getArguments()).getGroupName() != null) {
-            String groupName = GoodsFragmentArgs.fromBundle(getArguments()).getGroupName();
-
-            for (int i = 0; i < groups.size(); i++)
-                if (groups.get(i).equals(groupName))
-                    mBinding.searchArea.spinnerGroup.setSelection(i);
-        }
 
         mBinding.searchArea.btnSearch.setOnClickListener(v -> {
             String query = editQuery.getText().toString();
