@@ -21,6 +21,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.storagemanager.R;
+import com.example.storagemanager.backend.entity.Group;
 import com.example.storagemanager.databinding.FragmentGroupsBinding;
 import com.example.storagemanager.databinding.ItemGroupBinding;
 import com.example.storagemanager.entities.GroupEntity;
@@ -28,14 +29,24 @@ import com.example.storagemanager.exceptions.EntityException;
 import com.example.storagemanager.fragments.dialogs.DeleteDialog;
 import com.example.storagemanager.fragments.dialogs.GroupDialog;
 import com.example.storagemanager.viewmodels.GroupsViewModel;
+import com.fasterxml.jackson.core.type.TypeReference;
 
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
+
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
+import io.reactivex.rxjava3.schedulers.Schedulers;
 
 public class GroupsFragment extends Fragment implements
         GroupDialog.CreateGroupListener,
         GroupDialog.UpdateGroupListener,
         DeleteDialog.DeleteListener<GroupEntity> {
 
+    public static final String GROUP_DIALOG_TAG = "GROUP_DIALOG";
+    public static final String DELETE_GROUP_DIALOG_TAG = "DELETE_GROUP_DIALOG";
     private FragmentGroupsBinding mBinding;
     private GroupsViewModel mViewModel;
     private Adapter mAdapter;
@@ -57,13 +68,23 @@ public class GroupsFragment extends Fragment implements
         mViewModel = new ViewModelProvider(this)
                 .get(GroupsViewModel.class);
 
-        List<GroupEntity> groupEntities = mViewModel.getGroups(null);
-
         RecyclerView recyclerView = mBinding.groupsList;
-        mAdapter = new Adapter(groupEntities);
-
         recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
-        recyclerView.setAdapter(mAdapter);
+
+        List<GroupEntity> groupEntities = new ArrayList<>();
+        mViewModel.getGroups(null)
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(reply -> {
+                    try {
+                        List<Group> groupList = mViewModel.getMapper().readValue(reply, new TypeReference<List<Group>>() {
+                        });
+                        groupEntities.addAll(groupList.stream().filter(Objects::nonNull).map(GroupEntity::new).collect(Collectors.toList()));
+                        recyclerView.setAdapter(new Adapter(groupEntities));
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                });
 
         mBinding.fab.setOnClickListener(v -> {
             GroupDialog dialog = new GroupDialog((GroupDialog.CreateGroupListener) this, null);
@@ -94,6 +115,44 @@ public class GroupsFragment extends Fragment implements
     @Override
     public void delete(GroupEntity groupEntity) {
         mViewModel.deleteGroup(groupEntity);
+    }
+
+    @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+        menu.findItem(R.id.action_logout).setVisible(true);
+
+        MenuItem actionSearchView = menu.findItem(R.id.action_search_view);
+        actionSearchView.setVisible(true);
+
+        SearchView searchView = (SearchView) actionSearchView.getActionView();
+        searchView.setQueryHint(getResources().getString(R.string.search_view_hint));
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                List<GroupEntity> groups = new ArrayList<>();
+                mViewModel.getGroups(query)
+                        .subscribeOn(Schedulers.newThread())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(reply -> {
+                            try {
+                                List<Group> groupList = mViewModel.getMapper().readValue(reply, new TypeReference<List<Group>>() {
+                                });
+                                groups.addAll(groupList.stream().filter(Objects::nonNull).map(GroupEntity::new).collect(Collectors.toList()));
+                                mAdapter.setData(groups);
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        });
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                return false;
+            }
+        });
+
+        super.onPrepareOptionsMenu(menu);
     }
 
     class Adapter extends RecyclerView.Adapter<Adapter.GroupViewHolder> {
@@ -181,33 +240,4 @@ public class GroupsFragment extends Fragment implements
             }
         }
     }
-
-    @Override
-    public void onPrepareOptionsMenu(Menu menu) {
-        menu.findItem(R.id.action_logout).setVisible(true);
-
-        MenuItem actionSearchView = menu.findItem(R.id.action_search_view);
-        actionSearchView.setVisible(true);
-
-        SearchView searchView = (SearchView) actionSearchView.getActionView();
-        searchView.setQueryHint(getResources().getString(R.string.search_view_hint));
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                List<GroupEntity> groups = mViewModel.getGroups(query);
-                mAdapter.setData(groups);
-                return true;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                return false;
-            }
-        });
-
-        super.onPrepareOptionsMenu(menu);
-    }
-
-    public static final String GROUP_DIALOG_TAG = "GROUP_DIALOG";
-    public static final String DELETE_GROUP_DIALOG_TAG = "DELETE_GROUP_DIALOG";
 }

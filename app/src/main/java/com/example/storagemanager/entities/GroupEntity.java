@@ -1,5 +1,6 @@
 package com.example.storagemanager.entities;
 
+import com.example.storagemanager.backend.entity.Group;
 import com.example.storagemanager.exceptions.EntityException;
 
 import lombok.Data;
@@ -18,5 +19,9 @@ public class GroupEntity {
 
         this.name = name;
         this.description = description;
+    }
+
+    public GroupEntity(Group group) throws EntityException {
+        this(group.getName(), group.getDescription());
     }
 }

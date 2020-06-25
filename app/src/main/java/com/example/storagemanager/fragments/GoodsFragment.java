@@ -26,11 +26,9 @@ import com.example.storagemanager.R;
 import com.example.storagemanager.Utils;
 import com.example.storagemanager.backend.entity.Good;
 import com.example.storagemanager.backend.entity.Group;
-import com.example.storagemanager.Utils;
 import com.example.storagemanager.databinding.FragmentGoodsBinding;
 import com.example.storagemanager.databinding.ItemGoodBinding;
 import com.example.storagemanager.entities.GoodEntity;
-import com.example.storagemanager.entities.GroupEntity;
 import com.example.storagemanager.exceptions.EntityException;
 import com.example.storagemanager.fragments.dialogs.ChangeAmountDialog;
 import com.example.storagemanager.fragments.dialogs.DeleteDialog;
@@ -58,6 +56,7 @@ public class GoodsFragment extends Fragment implements
     private static final String GOOD_DIALOG_TAG = "GOOD_DIALOG";
     private static final String DELETE_GOOD_DIALOG_TAG = "DELETE_GOOD_DIALOG";
     private static final String CHANGE_AMOUNT_DIALOG_TAG = "CHANGE_AMOUNT_DIALOG";
+    private static final String SPINNER_ANY = "Any";
     private FragmentGoodsBinding mBinding;
     private GoodsViewModel mViewModel;
     private AppBarLayout mAppBarLayout;
@@ -121,7 +120,7 @@ public class GoodsFragment extends Fragment implements
                         groups.addAll(groupList.stream().filter(Objects::nonNull).map(Group::getName).collect(Collectors.toList()));
                         groups.add(0, SPINNER_ANY);
                         spinnerGroup.setAdapter(
-                                new ArrayAdapter<>(requireContext(), R.layout.item_spinner, groups));
+                                new ArrayAdapter<>(requireContext(), R.layout.item_spinner_white, groups));
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -137,7 +136,7 @@ public class GoodsFragment extends Fragment implements
                         producers.addAll(producersList.stream().filter(Objects::nonNull).collect(Collectors.toList()));
                         producers.add(0, SPINNER_ANY);
                         spinnerProducer.setAdapter(
-                                new ArrayAdapter<>(requireContext(), R.layout.item_spinner, producers));
+                                new ArrayAdapter<>(requireContext(), R.layout.item_spinner_white, producers));
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -160,6 +159,11 @@ public class GoodsFragment extends Fragment implements
             Integer amountMax = Utils.getIntOrNull(editAmountMax);
             Integer priceMin = Utils.getIntOrNull(editPriceMin);
             Integer priceMax = Utils.getIntOrNull(editPriceMax);
+
+            if (group != null && group.equals(SPINNER_ANY))
+                group = null;
+            if (producer != null && producer.equals(SPINNER_ANY))
+                producer = null;
 
 //            List<GoodEntity> goodEntities = mViewModel.getGoods(query, group, producer,
 //                    amountMin, amountMax, priceMin, priceMax);

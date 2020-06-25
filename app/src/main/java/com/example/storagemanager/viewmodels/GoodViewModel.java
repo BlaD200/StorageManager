@@ -1,17 +1,23 @@
 package com.example.storagemanager.viewmodels;
 
-import androidx.lifecycle.ViewModel;
+import com.example.storagemanager.backend.dto.GoodDTO;
+import com.example.storagemanager.backend.entity.CommandType;
 
-import com.example.storagemanager.entities.GoodEntity;
-
+import io.reactivex.rxjava3.core.Observable;
 import lombok.SneakyThrows;
 
-public class GoodViewModel extends ViewModel {
+public class GoodViewModel extends BaseViewModel {
 
-    @SneakyThrows
-    public GoodEntity getGoodByName(String name) {
-        // TODO get good by name
-        return new GoodEntity("name", "group", "description",
-                "producer", 100, 100);
+    public @io.reactivex.rxjava3.annotations.NonNull Observable<String> getGoodByName(String name) {
+        return Observable.defer(() -> {
+            String reply = clientConnection.conversation(
+                    CommandType.GET_GOOD,
+                    mapper.writeValueAsString(
+                            GoodDTO.builder()
+                                    .name(name)
+                                    .build())
+            ).getMessageText();
+            return Observable.just(reply);
+        });
     }
 }

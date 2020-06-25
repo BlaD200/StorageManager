@@ -14,9 +14,15 @@ import androidx.navigation.NavDirections;
 import androidx.navigation.Navigation;
 
 import com.example.storagemanager.R;
+import com.example.storagemanager.backend.entity.Good;
 import com.example.storagemanager.databinding.FragmentGoodBinding;
 import com.example.storagemanager.entities.GoodEntity;
 import com.example.storagemanager.viewmodels.GoodViewModel;
+
+import java.io.IOException;
+
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
+import io.reactivex.rxjava3.schedulers.Schedulers;
 
 public class GoodFragment extends Fragment {
 
@@ -39,8 +45,17 @@ public class GoodFragment extends Fragment {
                 .get(GoodViewModel.class);
 
         String goodName = GoodFragmentArgs.fromBundle(requireArguments()).getGoodName();
-        GoodEntity goodEntity = viewModel.getGoodByName(goodName);
-        mBinding.setGood(goodEntity);
+        viewModel.getGoodByName(goodName)
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(reply -> {
+                    try {
+                        Good good = viewModel.getMapper().readValue(reply, Good.class);
+                        mBinding.setGood(new GoodEntity(good));
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                });
 
         mBinding.textGroup.setOnClickListener(v -> {
             NavDirections action = GoodFragmentDirections

@@ -13,9 +13,15 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 
 import com.example.storagemanager.R;
+import com.example.storagemanager.backend.entity.Group;
 import com.example.storagemanager.databinding.FragmentGroupBinding;
 import com.example.storagemanager.entities.GroupEntity;
 import com.example.storagemanager.viewmodels.GroupViewModel;
+
+import java.io.IOException;
+
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
+import io.reactivex.rxjava3.schedulers.Schedulers;
 
 public class GroupFragment extends Fragment {
 
@@ -39,11 +45,25 @@ public class GroupFragment extends Fragment {
 
         String groupName = GroupFragmentArgs.fromBundle(requireArguments()).getGroupName();
 
-        GroupEntity groupEntity = viewModel.getGroupByName(groupName);
-        mBinding.setGroup(groupEntity);
+        viewModel.getGroupByName(groupName)
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(reply -> {
+                    try {
+                        Group good = viewModel.getMapper().readValue(reply, Group.class);
+                        GroupEntity groupEntity = new GroupEntity(good.getName(), good.getDescription());
+                        mBinding.setGroup(groupEntity);
 
-        int groupTotalPrice = viewModel.getGroupTotalPrice(groupEntity);
-        mBinding.setTotalPrice(groupTotalPrice);
+                        viewModel.getGroupTotalPrice(groupEntity)
+                                .subscribeOn(Schedulers.newThread())
+                                .observeOn(AndroidSchedulers.mainThread())
+                                .subscribe(reply2 -> {
+                                    mBinding.setTotalPrice((int) Double.parseDouble(reply2));
+                                });
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                });
 
         mBinding.cardGoods.setOnClickListener(v -> {
             GroupFragmentDirections.ActionGroupFragmentToGoodsFragment action =

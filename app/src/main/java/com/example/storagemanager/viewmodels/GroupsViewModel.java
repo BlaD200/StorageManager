@@ -1,44 +1,72 @@
 package com.example.storagemanager.viewmodels;
 
-import androidx.lifecycle.ViewModel;
-
+import com.example.storagemanager.backend.dto.GroupDTO;
+import com.example.storagemanager.backend.dto.PagingDTO;
+import com.example.storagemanager.backend.dto.criteria.Criteria;
+import com.example.storagemanager.backend.entity.CommandType;
 import com.example.storagemanager.entities.GroupEntity;
 
-import java.util.LinkedList;
-import java.util.List;
+import io.reactivex.rxjava3.core.Observable;
 
-import lombok.SneakyThrows;
+public class GroupsViewModel extends BaseViewModel {
 
-public class GroupsViewModel extends ViewModel {
-
-    @SneakyThrows
-    public List<GroupEntity> getGroups(String query) {
-        // TODO get groups
-        List<GroupEntity> groupEntities = new LinkedList<>();
-
-        groupEntities.add(new GroupEntity("First Ever Created Group",
-                "And its awesome description!"));
-        groupEntities.add(new GroupEntity("Second Ever Created Group",
-                "And its awesome description"));
-        groupEntities.add(new GroupEntity("Third Ever Created Group",
-                "And its awesome description.."));
-        groupEntities.add(new GroupEntity("Another created group",
-                "And yet again another description"));
-        groupEntities.add(new GroupEntity("Group Im getting tired of it",
-                "Really tired description"));
-
-        return groupEntities;
+    public @io.reactivex.rxjava3.annotations.NonNull Observable<String> getGroups(String query) {
+        return Observable.defer(() -> {
+            String reply = clientConnection.conversation(
+                    CommandType.GET_GROUPS,
+                    mapper.writeValueAsString(
+                            PagingDTO.builder()
+                            .size(-1)
+                            .criteria(Criteria.builder().name(query).build())
+                            .build()
+                    )
+            ).getMessageText();
+            return Observable.just(reply);
+        });
     }
 
-    public void createGroup(GroupEntity groupEntity) {
-        // TODO create group
+    public @io.reactivex.rxjava3.annotations.NonNull Observable<String> createGroup(GroupEntity groupEntity) {
+        return Observable.defer(() -> {
+            String reply = clientConnection.conversation(
+                    CommandType.CREATE_GROUP,
+                    mapper.writeValueAsString(
+                            GroupDTO.builder()
+                                    .name(groupEntity.getName())
+                                    .description(groupEntity.getDescription())
+                                    .build())
+            ).getMessageText();
+            return Observable.just(reply);
+        });
     }
 
-    public void updateGroup(GroupEntity groupEntity) {
+    public @io.reactivex.rxjava3.annotations.NonNull Observable<String> updateGroup(GroupEntity groupEntity) {
         // TODO update group
+//        return Observable.defer(() -> {
+//            String reply1 = clientConnection.conversation(
+//                    CommandType.,
+//                    mapper.writeValueAsString(
+//                            GroupDTO.builder()
+//                                    .name(groupEntity.getName())
+//                                    .description(groupEntity.getDescription())
+//                                    .build())
+//            ).getMessageText();
+//
+//
+//            return Observable.just(reply1);
+//        });
+        return null;
     }
 
-    public void deleteGroup(GroupEntity groupEntity) {
-        // TODO delete group
+    public @io.reactivex.rxjava3.annotations.NonNull Observable<String> deleteGroup(GroupEntity groupEntity) {
+        return Observable.defer(() -> {
+            String reply = clientConnection.conversation(
+                    CommandType.DELETE_GROUP,
+                    mapper.writeValueAsString(
+                            GroupDTO.builder()
+                                    .name(groupEntity.getName())
+                                    .build())
+            ).getMessageText();
+            return Observable.just(reply);
+        });
     }
 }

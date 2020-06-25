@@ -38,12 +38,8 @@ public class GoodEntity {
         this.price = price;
     }
 
-    public GoodEntity(Good good) {
-        this.name = good.getName();
-        this.group = good.getGroupName();
-        this.description = good.getDescription();
-        this.producer = good.getProducer();
-        this.amount = good.getAmount();
-        this.price = good.getPrice().intValue();
+    public GoodEntity(Good good) throws EntityException {
+        this(good.getName(), good.getGroupName(), good.getDescription(),
+                good.getProducer(), good.getAmount(), good.getPrice().intValue());
     }
 }
